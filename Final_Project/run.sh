@@ -8,7 +8,7 @@
 
 PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so ### Action Required: Specify the path to your pass ###
 NAME_MYPASS=-finalproject ### Action Required: Specify the name for your pass ###
-BENCH=src/${1}.c
+BENCH=${1}.c
 INPUT=${2}
 
 setup(){
