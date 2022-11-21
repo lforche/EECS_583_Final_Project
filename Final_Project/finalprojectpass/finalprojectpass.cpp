@@ -20,7 +20,12 @@ namespace{
 		virtual bool runOnFunction(Function &F) override{
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
                 for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) 
-                    errs() << *(i) << "\n";
+                    // if ((&(*(i)))->getNextNode() != nullptr
+                    // && (&(*(i)))->getOpcode() == Instruction::Store && ((&(*(i)))->getNextNode())->getOpcode() == Instruction::Load)
+                        errs() << *(i) << "\n";
+                        // errs() << (&(*(i)))->getOpcodeName() << "\n";
+                        // errs() << (&(*(i)))->getOpcodeName() << "\t" << ((&(*(i)))->getNextNode())->getOpcodeName() << "\n";
+                        // errs() << (*i) << "\t" << (*(&(*(i)))->getNextNode()) << "---" << dyn_cast<StoreInst>(&(*(i)))->getPointerOperand()->getName() << "\t" << ((&(*(i)))->getNextNode())->getOperand(0)->getName() << "\n";
             }
 
 			return false; 
