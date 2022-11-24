@@ -4,7 +4,7 @@ void myFunc(int input2, int input3);
 int main()
 {
   int x = 0;
-  int y = 0;
+  int y = 1;
 
   myFunc(x, y);
 
