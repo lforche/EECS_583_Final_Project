@@ -303,7 +303,8 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: \
  /usr/local/include/llvm/Support/MD5.h \
  /usr/local/include/llvm/Support/Endian.h \
  /usr/local/include/llvm/IR/OperandTraits.h \
- /usr/local/include/llvm/Analysis/BlockFrequencyInfo.h \
+ /usr/local/include/llvm/Analysis/AliasAnalysis.h \
+ /usr/local/include/llvm/Analysis/MemoryLocation.h \
  /usr/local/include/llvm/IR/PassManager.h \
  /usr/local/include/llvm/ADT/SmallPtrSet.h \
  /usr/local/include/llvm/ADT/TinyPtrVector.h \
@@ -329,16 +330,9 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: \
  /usr/local/include/llvm/Support/Format.h \
  /usr/local/include/llvm/Support/TypeName.h /usr/include/c++/11/list \
  /usr/include/c++/11/bits/stl_list.h /usr/include/c++/11/bits/list.tcc \
- /usr/local/include/llvm/Support/BlockFrequency.h \
- /usr/local/include/llvm/Analysis/BranchProbabilityInfo.h \
- /usr/local/include/llvm/IR/CFG.h \
- /usr/local/include/llvm/ADT/GraphTraits.h \
- /usr/local/include/llvm/IR/ValueHandle.h \
- /usr/local/include/llvm/Support/BranchProbability.h \
- /usr/include/c++/11/numeric /usr/include/c++/11/bits/stl_numeric.h \
- /usr/include/c++/11/pstl/glue_numeric_defs.h \
  /usr/local/include/llvm/IR/Instructions.h \
- /usr/local/include/llvm/ADT/MapVector.h \
+ /usr/local/include/llvm/ADT/MapVector.h /usr/local/include/llvm/IR/CFG.h \
+ /usr/local/include/llvm/ADT/GraphTraits.h \
  /usr/local/include/llvm/IR/InstrTypes.h \
  /usr/local/include/llvm/ADT/Sequence.h \
  /usr/local/include/llvm/IR/Constants.h \
