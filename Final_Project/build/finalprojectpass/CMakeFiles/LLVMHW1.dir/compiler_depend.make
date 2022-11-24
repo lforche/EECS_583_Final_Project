@@ -358,7 +358,8 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: ../finalprojectp
   /usr/local/include/llvm/Support/MD5.h \
   /usr/local/include/llvm/Support/Endian.h \
   /usr/local/include/llvm/IR/OperandTraits.h \
-  /usr/local/include/llvm/Analysis/BlockFrequencyInfo.h \
+  /usr/local/include/llvm/Analysis/AliasAnalysis.h \
+  /usr/local/include/llvm/Analysis/MemoryLocation.h \
   /usr/local/include/llvm/IR/PassManager.h \
   /usr/local/include/llvm/ADT/SmallPtrSet.h \
   /usr/local/include/llvm/ADT/TinyPtrVector.h \
@@ -387,17 +388,10 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: ../finalprojectp
   /usr/include/c++/11/list \
   /usr/include/c++/11/bits/stl_list.h \
   /usr/include/c++/11/bits/list.tcc \
-  /usr/local/include/llvm/Support/BlockFrequency.h \
-  /usr/local/include/llvm/Analysis/BranchProbabilityInfo.h \
-  /usr/local/include/llvm/IR/CFG.h \
-  /usr/local/include/llvm/ADT/GraphTraits.h \
-  /usr/local/include/llvm/IR/ValueHandle.h \
-  /usr/local/include/llvm/Support/BranchProbability.h \
-  /usr/include/c++/11/numeric \
-  /usr/include/c++/11/bits/stl_numeric.h \
-  /usr/include/c++/11/pstl/glue_numeric_defs.h \
   /usr/local/include/llvm/IR/Instructions.h \
   /usr/local/include/llvm/ADT/MapVector.h \
+  /usr/local/include/llvm/IR/CFG.h \
+  /usr/local/include/llvm/ADT/GraphTraits.h \
   /usr/local/include/llvm/IR/InstrTypes.h \
   /usr/local/include/llvm/ADT/Sequence.h \
   /usr/local/include/llvm/IR/Constants.h \
@@ -439,17 +433,7 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: ../finalprojectp
 
 /usr/local/include/llvm/IR/InstrTypes.h:
 
-/usr/include/c++/11/bits/stl_numeric.h:
-
-/usr/include/c++/11/numeric:
-
-/usr/local/include/llvm/Support/BranchProbability.h:
-
-/usr/local/include/llvm/IR/ValueHandle.h:
-
 /usr/local/include/llvm/ADT/GraphTraits.h:
-
-/usr/local/include/llvm/Analysis/BranchProbabilityInfo.h:
 
 /usr/include/c++/11/list:
 
@@ -687,8 +671,6 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: ../finalprojectp
 
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
 
-/usr/include/c++/11/pstl/glue_numeric_defs.h:
-
 /usr/local/include/llvm/Support/TypeSize.h:
 
 /usr/local/include/llvm/IR/Metadata.def:
@@ -721,8 +703,6 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: ../finalprojectp
 
 /usr/include/c++/11/bits/postypes.h:
 
-/usr/local/include/llvm/Analysis/BlockFrequencyInfo.h:
-
 /usr/include/x86_64-linux-gnu/c++/11/bits/gthr.h:
 
 /usr/include/c++/11/bits/functexcept.h:
@@ -740,6 +720,8 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: ../finalprojectp
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h:
 
 ../finalprojectpass/finalprojectpass.cpp:
+
+/usr/local/include/llvm/Analysis/AliasAnalysis.h:
 
 /usr/include/c++/11/initializer_list:
 
@@ -1149,8 +1131,6 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: ../finalprojectp
 
 /usr/include/c++/11/backward/auto_ptr.h:
 
-/usr/local/include/llvm/Support/BlockFrequency.h:
-
 /usr/include/c++/11/cstddef:
 
 /usr/include/c++/11/bits/stl_vector.h:
@@ -1212,6 +1192,8 @@ finalprojectpass/CMakeFiles/LLVMHW1.dir/finalprojectpass.cpp.o: ../finalprojectp
 /usr/local/include/llvm/ADT/PointerUnion.h:
 
 /usr/include/c++/11/bits/nested_exception.h:
+
+/usr/local/include/llvm/Analysis/MemoryLocation.h:
 
 /usr/include/string.h:
 
