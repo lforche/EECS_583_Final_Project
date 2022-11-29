@@ -19,26 +19,35 @@ namespace{
         }
 
 		virtual bool runOnFunction(Function &F) override{
-            vector<Instruction*> aliasedInst;
+            vector<Instruction*> storeInst, loadInst;
             AAResults& AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
 
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
                 for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
                     if (isa<GetElementPtrInst>(i)) {
-                        if (aliasedInst.size() == 0 && isa<StoreInst>((&(*(i)))->getNextNode())) {
-                            errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(1)) << "\n";
-                            aliasedInst.push_back((*i).getNextNode());
+                        if (isa<StoreInst>((&(*(i)))->getNextNode())) {
+                            // errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(1)) << "\n";
+                            storeInst.push_back((*i).getNextNode());
                         }
-                        else if (aliasedInst.size() == 1 && isa<LoadInst>((&(*(i)))->getNextNode())) {
-                            errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(0)) << "\n";
-                            if (AA.isMustAlias(i->getNextNode()->getOperand(0), aliasedInst[0]->getOperand(1)))
-                                errs() << "yes" << "\n";
-                            else if (AA.isNoAlias(i->getNextNode()->getOperand(0), aliasedInst[0]->getOperand(1)))
-                                errs() << "nah" << "\n";
-                            else
-                                errs() << "maybe" << "\n"; 
-                            aliasedInst.push_back((*i).getNextNode());
-                        }  
+                        else if (isa<LoadInst>((&(*(i)))->getNextNode())) {
+                            // errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(0)) << "\n";
+                            loadInst.push_back((*i).getNextNode());
+                        } 
+                    }
+                }
+            }
+
+            if (storeInst.size() > 0) {
+                // errs() << "---------\n";
+                for (auto sto : storeInst) {
+                    for (auto lo : loadInst) {
+                        errs() << *sto << "\t" << *lo << "---a---\n" << *(sto->getOperand(1)) << "\t" << *(lo->getOperand(0)) << "---b---\n";
+                        if (AA.isMustAlias(sto->getOperand(1), lo->getOperand(0)))
+                            errs() << "yes" << "\n";
+                        else if (AA.isNoAlias(sto->getOperand(1), lo->getOperand(0)))
+                            errs() << "nah" << "\n";
+                        else
+                            errs() << "maybe" << "\n"; 
                     }
                 }
             }
