@@ -1,0 +1,21 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_exec_info --help | more' for documentation.
+#
+#  Source of this file's information:
+#     SPEC (http://www.spec.org/)
+#
+#  Revision history for this file:
+#     3/99  Created by Erik Nystrom (www.crhc.uiuc.edu/IMPACT)
+###############################################################################
+
+DESCRIPTION="SPEC92/benchspec/085.cc1/input.ref, tree";
+SETUP="ln -sf ${BENCH_DIR}/input18/tree.i .";
+PREFIX="";
+ARGS="tree.i -quiet -O -o tree.s";
+CHECK="cp tree.s ${RESULT_FILE}; diff ${RESULT_FILE} ${BENCH_DIR}/output18/tree.s"
+CLEANUP="rm -f tree.i tree.s";
+
+# Around 31,000,000 instructions in .O_im_p, simulate approx. 10,000,000
+SKIP="420000";

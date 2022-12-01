@@ -1,0 +1,163 @@
+lll"NEW COMPANY
+jjhhhh"DATE
+j"1j
+"1
+j"2
+j"3
+j"4
+j"5
+"5
+j:"6
+j"7
+j"8
+j;"9
+j"10
+j"11
+j"12
+j"13
+j"14
+j"15
+j"16
+j"17
+j"18
+j"19
+j"20
+j"21
+j"22
+j"23
+j"24
+j"25
+j"26
+j"27
+j"28
+j29"29
+j"30
+j"31
+a
+ga0
+jllllh"INCOME
+jhhhl"T
+"Item 1
+l"Item 2
+l'"Item 3
+l"Item 4
+l"item 5
+"Item 5
+l"Item 6
+l"Item 7
+l"Item 8
+ga0
+ga32
+jjj"t
+"TOTALS
+l=@sum(b3:b33)
+ga0
+gb35
+xpp=@sum(b23
+=@sum(b3:b33)
+mlcmlclclclclclcgi0
+ljj"Day RT
+"DAY TOTALS
+mlchxlj=@sum(b3:i3)
+mjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjcjjhhmllcga0
+/ca41:k76 a1:k35
+ga35
+jjjjjjlll"EXPENSES
+ga0
+go1
+j"Budgeted
+jA"Actual Income
+<Actual Income
+k<Budgeted
+jj<Actual Expenses
+jj<Budget-Income
+j<Income Expenses
+jkmjjckk"%
+jjj"%
+k<Income 
+<Income-Expenx
+<Income-EW
+<Income-Expense
+jjkkkkkkkkkllkllllhhhh"Catagory 1
+"Cat 1
+lCat"Cat 2
+lCa "Cat 3
+l"Cat 4
+l"Cat 5
+lCat"Cat 6
+jhhhhhhhll=10000
+l=10000
+l=10000
+l=10000
+l10000
+
+=10000
+l=10000
+ljhhhhhhhhlljjj=q1-q3
+=q2-q3
+j=q3/q2
+=q3/((q2>0)?q2:0.01)*100
+kkkk=100
+kjjjjkjjjj=q3-q4
+j=q4/((q3>0)?q3:0.01)*100
+kkkkkk=10
+kjjjllllll/cr6:v10 q6:q10
+gq3
+=b35
+lh=b35+b38
+l=(b36/2)+(b37/2)
+mlc=(b36/2)+(b37/2)
+hll=b39+(b40/2)
+l=b41+(b42/2)
+l=(b40/2)+(b42/2)
+hhhhhlllllhhhhhj=b79+(b75/2)
+l=(b78/2)+b76
+l=(b80/2)+(b81/2)
+l=(b75/2)+bb77
+=(b75/2)+b77
+l=(b78/2)+(b80/1)
+l=b82+(b81/2)
+hhhhhhkl/xq3:v4
+=b35+e35
+l=(c35/2)+(d35/2)
+l=(c35/2)+(d35/2)
+l=f35+(g35/2)
+l=h35+(i35/2)
+l=(g35/2)+(i35/2)
+hhhhhj=f75+(b75/2)
+l=(e75/2)+c75
+l=(g75/2)+(h75/2)
+l=(b75/2)+d75
+l=(e75/2)+(g75/2)
+l=h
+=i75+(h75/2)
+go1
+hhhdcdc/cu1:an75 a1:t75
+/ca81:t155 a1:t75
+ga0
+j"JAN
+ga80
+j"FEB
+gu1
+"MAR
+gu81
+"Quarterly Results
+jjl"Income
+j"Expense
+jj"Budget
+j/cw87:ad96 m1:t10
+jjjjjjjjjjkkkkkkkkkkkkkkl=@sum(
+=b35+b115+v35
+mlclclclclclclcjhhhhhhhhl=b75+b155+v75
+mlclclclclclclcgi2
+llllllgo155
+g o77
+jjjjjgad2
+lllllgy88
+=o2+o82+ai2
+mlclclclclcjhhhhh=o3+o83+ai3
+mlclclclclcjhhhhh=o4+o84+ai4
+mlclclclclcjjjjjjga0
+/va0:an199
+@Pload1.out
+Q

@@ -1,0 +1,4 @@
+timer ticks over every 1000 ns
+# Starting run for copy #0
+cd /opt/spec2006/benchspec/CPU2006/456.hmmer/run/run_base_test_i386-m32-gcc42-nn.0000
+../run_base_test_i386-m32-gcc42-nn.0000/hmmer_base.i386-m32-gcc42-nn --fixed 0 --mean 325 --num 45000 --sd 200 --seed 0 bombesin.hmm > bombesin.out 2>> bombesin.err

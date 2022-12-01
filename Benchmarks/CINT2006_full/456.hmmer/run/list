@@ -1,0 +1,2 @@
+run_base_test_i386-m32-gcc42-nn.0000 dir=/opt/spec2006/benchspec/CPU2006/456.hmmer/run/run_base_test_i386-m32-gcc42-nn.0000 ext=i386-m32-gcc42-nn lock=0 mach=default size=test tune=base type=run username=andyrewbobb
+__END__

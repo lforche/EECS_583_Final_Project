@@ -1,0 +1,251 @@
+#!/bin/sh
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+ # LICENSE AGREEMENT NOTICE
+ #
+ # IT IS A BREACH OF THIS LICENSE AGREEMENT TO REMOVE THIS NOTICE FROM
+ # THE FILE OR SOFTWARE, OR ANY MODIFIED VERSIONS OF THIS FILE OR
+ # SOFTWARE OR DERIVATIVE WORKS.
+ #
+ # ------------------------------
+ #
+ # Copyright Notices/Identification of Licensor(s) of
+ # Original Software in the File
+ #
+ # Copyright 1990-1999 The Board of Trustees of the University of Illinois
+ # For commercial license rights, contact: Research and Technology
+ # Management Office, University of Illinois at Urbana-Champaign;
+ # FAX: 217-244-3716, or email: rtmo@uiuc.edu
+ #
+ # All rights reserved by the foregoing, respectively.
+ #
+ # ------------------------------
+ #
+ # Copyright Notices/Identification of Subsequent Licensor(s)/Contributors
+ # of Derivative Works
+ #
+ # Copyright  <Year> <Owner>
+ # <Optional:  For commercial license rights, contact:_____________________>
+ #
+ # All rights reserved by the foregoing, respectively.
+ #
+ # ------------------------------
+ #
+ # The code contained in this file, including both binary and source
+ # [if released by the owner(s)] (hereafter, Software) is subject to
+ # copyright by the respective Licensor(s) and ownership remains with
+ # such Licensor(s).  The Licensor(s) of the original Software remain
+ # free to license their respective proprietary Software for other
+ # purposes that are independent and separate from this file, without
+ # obligation to any party.
+ #
+ # Licensor(s) grant(s) you (hereafter, Licensee) a license to use the
+ # Software for academic, research and internal business purposes only,
+ # without a fee.  "Internal business purposes" means that Licensee may
+ # install, use and execute the Software for the purpose of designing and
+ # evaluating products.  Licensee may submit proposals for research
+ # support, and receive funding from private and Government sponsors for
+ # continued development, support and maintenance of the Software for the
+ # purposes permitted herein.
+ #
+ # Licensee may also disclose results obtained by executing the Software,
+ # as well as algorithms embodied therein.  Licensee may redistribute the
+ # Software to third parties provided that the copyright notices and this
+ # License Agreement Notice statement are reproduced on all copies and
+ # that no charge is associated with such copies.  No patent or other
+ # intellectual property license is granted or implied by this Agreement,
+ # and this Agreement does not license any acts except those expressly
+ # recited.
+ #
+ # Licensee may modify the Software to make derivative works (as defined
+ # in Section 101 of Title 17, U.S. Code) (hereafter, Derivative Works),
+ # as necessary for its own academic, research and internal business
+ # purposes.  Title to copyrights and other proprietary rights in
+ # Derivative Works created by Licensee shall be owned by Licensee
+ # subject, however, to the underlying ownership interest(s) of the
+ # Licensor(s) in the copyrights and other proprietary rights in the
+ # original Software.  All the same rights and licenses granted herein
+ # and all other terms and conditions contained in this Agreement
+ # pertaining to the Software shall continue to apply to any parts of the
+ # Software included in Derivative Works.  Licensee's Derivative Work
+ # should clearly notify users that it is a modified version and not the
+ # original Software distributed by the Licensor(s).
+ #
+ # If Licensee wants to make its Derivative Works available to other
+ # parties, such distribution will be governed by the terms and
+ # conditions of this License Agreement.  Licensee shall not modify this
+ # License Agreement, except that Licensee shall clearly identify the
+ # contribution of its Derivative Work to this file by adding an
+ # additional copyright notice to the other copyright notices listed
+ # above, to be added below the line "Copyright Notices/Identification of
+ # Subsequent Licensor(s)/Contributors of Derivative Works."  A party who
+ # is not an owner of such Derivative Work within the meaning of
+ # U.S. Copyright Law (i.e., the original author, or the employer of the
+ # author if "work of hire") shall not modify this License Agreement or
+ # add such party's name to the copyright notices above.
+ #
+ # Each party who contributes Software or makes a Derivative Work to this
+ # file (hereafter, Contributed Code) represents to each Licensor and to
+ # other Licensees for its own Contributed Code that:
+ #
+ # (a) Such Contributed Code does not violate (or cause the Software to
+ # violate) the laws of the United States, including the export control
+ # laws of the United States, or the laws of any other jurisdiction.
+ #
+ # (b) The contributing party has all legal right and authority to make
+ # such Contributed Code available and to grant the rights and licenses
+ # contained in this License Agreement without violation or conflict with
+ # any law.
+ #
+ # (c) To the best of the contributing party's knowledge and belief,
+ # the Contributed Code does not infringe upon any proprietary rights or
+ # intellectual property rights of any third party.
+ #
+ # LICENSOR(S) MAKE(S) NO REPRESENTATIONS ABOUT THE SUITABILITY OF THE
+ # SOFTWARE OR DERIVATIVE WORKS FOR ANY PURPOSE.  IT IS PROVIDED "AS IS"
+ # WITHOUT EXPRESS OR IMPLIED WARRANTY, INCLUDING BUT NOT LIMITED TO THE
+ # MERCHANTABILITY, USE OR FITNESS FOR ANY PARTICULAR PURPOSE AND ANY
+ # WARRANTY AGAINST INFRINGEMENT OF ANY INTELLECTUAL PROPERTY RIGHTS.
+ # LICENSOR(S) SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY THE USERS
+ # OF THE SOFTWARE OR DERIVATIVE WORKS.
+ #
+ # Any Licensee wishing to make commercial use of the Software or
+ # Derivative Works should contact each and every Licensor to negotiate
+ # an appropriate license for such commercial use, and written permission
+ # of all Licensors will be required for such a commercial license.
+ # Commercial use includes (1) integration of all or part of the source
+ # code into a product for sale by or on behalf of Licensee to third
+ # parties, or (2) distribution of the Software or Derivative Works to
+ # third parties that need it to utilize a commercial product sold or
+ # licensed by or on behalf of Licensee.
+ #
+ # By using or copying this Contributed Code, Licensee agrees to abide by
+ # the copyright law and all other applicable laws of the U.S., and the
+ # terms of this License Agreement.  Any individual Licensor shall have
+ # the right to terminate this license immediately by written notice upon
+ # Licensee's breach of, or non-compliance with, any of its terms.
+ # Licensee may be held legally responsible for any copyright
+ # infringement that is caused or encouraged by Licensee's failure to
+ # abide by the terms of this License Agreement.
+###############################################################################
+#
+#       This script copies the specified benchmark's source into './src'.
+#
+#       Run this script with no arguments for usage information.
+#
+#       Script created by John Gyllenhaal, Wen-mei Hwu 7/99
+#
+
+# These four parameter control what files are copied
+BENCHMARK="022.li"
+
+# Files from .../${BENCHMARK}
+SRC_FILES="unixstuff.c xlbfun.c xlcont.c xldbug.c xldmem.c xleval.c xlfio.c \
+           xlftab.c xlglob.c xlinit.c xlio.c xlisp.c xlisp.h xljump.c \
+           xllist.c xlmath.c xlobj.c xlprin.c xlread.c xlstr.c xlsubr.c \
+           xlsym.c xlsys.c"
+
+# Files from ./
+LOCAL_FILES=""
+
+SPEC_PATH="(none)"
+
+VALID_ARGS=1;
+# Get the root spec path
+if [ $# -eq 1 ]; then
+   SPEC_PATH="$1";
+
+else
+   VALID_ARGS=0;
+fi
+
+# If not in error state, make sure SPEC_PATH exists
+if [ $VALID_ARGS -eq 1 ]; then
+   if [ ! -d ${SPEC_PATH} ]; then
+      echo " "
+      echo "> Error: Invalid SPEC_PATH specified, directory does not exist:"
+      echo ">   ${SPEC_PATH}"
+      VALID_ARGS=0;
+   fi
+fi
+
+
+# If not in error state, make sure SPEC_PATH/BENCHMARK exists
+if [ $VALID_ARGS -eq 1 ]; then
+   if [ ! -d ${SPEC_PATH}/${BENCHMARK} ]; then
+      echo " "
+      echo "> Error: Invalid SPEC_PATH specified, '$BENCHMARK' expected in:"
+      echo ">   ${SPEC_PATH}"
+      VALID_ARGS=0;
+   fi
+fi
+
+if [ $VALID_ARGS -eq 0 ]; then
+    echo ' ';
+    echo "> Usage: make_src_${BENCHMARK} SPEC_PATH ";
+    echo '> ';
+    echo "> Makes directory ./src (moving existing directory to ./old_src) and copies"
+
+    echo "> into ./src the appropriate source files from the SPEC distribution."
+    echo ">"
+    echo "> SPEC_PATH should be the base SPEC92 directory."
+    echo "> For example:  'make_src_${BENCHMARK} /home/bajor/benchspec'"
+    echo ">"
+    echo "> For some benchmarks, some extra files are copied in (i.e., qsort.c)"
+    echo "> and compatibility patches are applied, if necessary."
+    exit 2;
+fi
+
+# Move existing ./src directory to ./old_src
+if [ -d ./src ]; then
+   echo "> Moving directory './src' to './old_src'"
+   rm -rf ./old_src
+   mv -f ./src ./old_src
+   if test "$?" != 0; then echo "Exiting: mv exited with error code";exit 1;fi
+fi
+
+echo "> Creating directory 'src' in '.'"
+mkdir ./src
+if test "$?" != 0; then echo "Exiting: mkdir exited with error code";exit 1;fi
+
+CUR_DIR=`pwd`;
+echo "> Copying SPEC source files for ${BENCHMARK} into:"
+echo ">   ${CUR_DIR}/src"
+echo "> "
+
+# Get bench src path for ease of use
+SRC_PATH="${SPEC_PATH}/${BENCHMARK}";
+
+# Copy the specified files (if any) out of the benchmark's src directory
+for FILE in $SRC_FILES
+do
+   # Make sure file exists in SRC_PATH
+   if [ ! -f ${SRC_PATH}/${FILE} ]; then
+      echo "> Error: Source file '${FILE}' not found in"
+      echo ">   ${SRC_PATH}"
+      exit 1;
+   fi
+   
+   echo "> Copying .../${BENCHMARK}/${FILE} to ./src" 
+   cp -f ${SRC_PATH}/${FILE} ./src
+   if test "$?" != 0; then echo "Exiting: cp exited with error code";exit 1;fi
+done
+
+
+# Copy the specified files (if any) out of local directory
+for FILE in $LOCAL_FILES
+do
+   # Make sure file exists in LOCAL_PATH
+   if [ ! -f ./${FILE} ]; then
+      echo "> Error: Source file '${FILE}' not found in '.'"
+      exit 1;
+   fi
+   echo "> Copying ./${FILE} to ./src" 
+   cp -f ./${FILE} ./src
+   if test "$?" != 0; then echo "Exiting: cp exited with error code";exit 1;fi
+done
+
+echo "> "
+echo "> Done"
+

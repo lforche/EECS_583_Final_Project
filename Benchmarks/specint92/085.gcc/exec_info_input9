@@ -1,0 +1,21 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_exec_info --help | more' for documentation.
+#
+#  Source of this file's information:
+#     SPEC (http://www.spec.org/)
+#
+#  Revision history for this file:
+#     3/99  Created by Erik Nystrom (www.crhc.uiuc.edu/IMPACT)
+###############################################################################
+
+DESCRIPTION="SPEC92/benchspec/085.cc1/input.ref, insn-emit";
+SETUP="ln -sf ${BENCH_DIR}/input9/insn-emit.i .";
+PREFIX="";
+ARGS="insn-emit.i -quiet -O -o insn-emit.s";
+CHECK="cp insn-emit.s ${RESULT_FILE}; diff ${RESULT_FILE} ${BENCH_DIR}/output9/insn-emit.s"
+CLEANUP="rm -f insn-emit.i insn-emit.s";
+
+# Around 30,000,000 instructions in .O_im_p, simulate approx. 10,000,000
+SKIP="400000";

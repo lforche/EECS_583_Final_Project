@@ -1,0 +1,20 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_exec_info --help | more' for documentation.
+#
+#  Source of this file's information:
+#     SPEC (http://www.spec.org/)
+#
+#  Revision history for this file:
+#     1/2000	DIA created file
+###############################################################################
+
+DESCRIPTION="SPEC92/benchspec/056.ear/input.ref"
+SETUP="ln -sf ${BENCH_DIR}/input2/ref.m22 .";
+PREFIX="";
+ARGS="if=ref.m22 taufactor=1 df=100 clag=512 normalize=.5 earq=4 stepfactor=.125";
+CHECK="spiff -q -r0.001 ${RESULT_FILE} ${BENCH_DIR}/output2/result.out && spiff -q -r0.001 err.out ${BENCH_DIR}/output2/err.out"
+CLEANUP="rm -f ref.m22";
+SKIP="19800000";
+

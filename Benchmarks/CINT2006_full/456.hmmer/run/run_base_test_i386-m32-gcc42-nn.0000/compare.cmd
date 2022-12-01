@@ -1,0 +1,1 @@
+-c /opt/spec2006/benchspec/CPU2006/456.hmmer/run/run_base_test_i386-m32-gcc42-nn.0000 -o bombesin.out.cmp specperl /opt/spec2006/bin/specdiff -m -l 10  --abstol 1e-05  --reltol 0.002 /opt/spec2006/benchspec/CPU2006/456.hmmer/data/test/output/bombesin.out bombesin.out

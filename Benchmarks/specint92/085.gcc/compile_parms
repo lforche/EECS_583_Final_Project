@@ -1,0 +1,19 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_compile_info --help | more' for documentation.
+#
+#  Revision history for this file:
+#     6/99  Created by John C. Gyllenhaal (www.crhc.uiuc.edu/IMPACT)
+###############################################################################
+
+(Lglobal $BASELINE_PARMS_FILE$
+    # The following two memory disambiguation flags are 'unsafe' but
+    # work for most benchmarks, but not 085.cc1.
+    label_and_reg_access_indep = no;
+    diff_data_types_indep = no;
+end)
+
+# Use the baseline parameter file for all the other parameter settings
+(* $BASELINE_PARMS_FILE$
+end)

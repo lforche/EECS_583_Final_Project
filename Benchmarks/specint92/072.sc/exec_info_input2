@@ -1,0 +1,21 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_exec_info --help | more' for documentation.
+#
+#  Source of this file's information:
+#     SPEC (http://www.spec.org/)
+#
+#  Revision history for this file:
+#     2/99  Created by John C. Gyllenhaal (www.crhc.uiuc.edu/IMPACT)
+###############################################################################
+
+DESCRIPTION="SPEC92/benchspec/072.sc/input.ref loada2";
+SETUP="ln -sf ${BENCH_DIR}/input2/test.start .;ln -sf ${BENCH_DIR}/input2/loada2 .";
+PREFIX="TERM=vt220; LINES=24; COLUMNS=80;";
+ARGS="test.start < loada2";
+CHECK="cat ${RESULT_FILE}; spiff -q -r 0.0001 loada2.out ${BENCH_DIR}/output2/loada2.out | head -100";
+CLEANUP="rm -f loada2 test.start loada2.out";
+
+# Around 74,000,000 instructions in .O_im_p, simulate approx. 10,000,000
+SKIP="1280000";

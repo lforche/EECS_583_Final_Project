@@ -1,0 +1,21 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_exec_info --help | more' for documentation.
+#
+#  Source of this file's information:
+#     SPEC (http://www.spec.org/)
+#
+#  Revision history for this file:
+#     3/99  Created by Erik Nystrom (www.crhc.uiuc.edu/IMPACT)
+###############################################################################
+
+DESCRIPTION="SPEC92/benchspec/023.eqntott/input.short";
+SETUP="ln -sf ${BENCH_DIR}/input3/ex1.eqn .";
+PREFIX="";
+ARGS="-s -.ioplte ex1.eqn";
+CHECK="diff ${RESULT_FILE} ${BENCH_DIR}/output3/ex1.out"
+CLEANUP="rm -f ex1.eqn";
+
+# Around 19,000 instructions in .O_im_p, simulate everthing
+SKIP="0";

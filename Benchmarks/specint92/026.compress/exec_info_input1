@@ -1,0 +1,21 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_exec_info --help | more' for documentation.
+#
+#  Source of this file's information:
+#     SPEC (http://www.spec.org/)
+#
+#  Revision history for this file:
+#     2/99  Created by John C. Gyllenhaal (www.crhc.uiuc.edu/IMPACT)
+###############################################################################
+
+DESCRIPTION="SPEC92/benchspec/026.compress/input.ref"
+SETUP="ln -sf ${BENCH_DIR}/input1/compress.in .";
+PREFIX="";
+ARGS=" compress.in";
+CHECK="diff compress.in.Z ${BENCH_DIR}/output1/result.out"
+CLEANUP="rm -f compress.in compress.in.Z";
+
+# Around 44,000,000 instructions in .O_im_p, simulate approx. 10,000,000
+SKIP="680000";

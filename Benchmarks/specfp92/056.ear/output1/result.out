@@ -1,0 +1,22 @@
+Lyon Ear Model
+	Input File (if)..................... short.m22
+	Output File (of).................... cochlea.pic
+	Filtered Sound File (ff)............ None
+	Correlation Output File (cf)........ None
+	Agc Stage 1 Tau (tau1).............. 0.64s
+	Agc Stage 2 Tau (tau2).............. 0.16s
+	Agc Stage 3 Tau (tau3).............. 0.04s
+	Agc Stage 4 Tau (tau4).............. 0.01s
+	Agc State 1 Target (target1)........ 0.0032
+	Agc State 2 Target (target2)........ 0.0016
+	Agc State 3 Target (target3)........ 0.0008
+	Agc State 4 Target (target4)........ 0.0004
+	Decimation Tau Factor (taufactor)... 1
+	Decimation Factor (df).............. 100
+	Ear Break Frequency (breakf)........ 1000
+	Ear Q Factor (earq)................. 4
+	Ear Step Factor (stepfactor)........ 0.125
+	Ear Zero Sharpness (sharpness)...... 5
+	Ear Zero Offset (offset)............ 1.5
+	Ear Preemphasis Corner (preemph).... 300
+Image (cochlea.pic) is 92x186 (ascii text, no header).

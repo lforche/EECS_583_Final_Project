@@ -1,0 +1,30 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_compile_info --help | more' for documentation.
+#
+#  Source of this file's information:
+#     SPEC (http://www.spec.org/)
+#
+#  Revision history for this file:
+#     2/99  Created by John C. Gyllenhaal (www.crhc.uiuc.edu/IMPACT)
+###############################################################################
+
+# K&R C
+ANSI_C_SOURCE=1;
+
+# Needs math library and a reliable path to a compatible C preprocessor.
+# (Hard-coded to /bin/cc in original spec source.)  This fix requires
+# that eqntott_cpp be in the user's path.  In IMPACT release 2.33, this
+# executable will built during installation using Gnu's cccp source and p
+# laced in the impact bin directory (so should be in the path automatically).
+PREPROCESSING_OPTIONS="-DIMPACT_FIX -DEQNTOTT_CPP_FIX";
+LINKING_PREOPTIONS="";
+LINKING_POSTOPTIONS="-lm";
+LIB_REQUIREMENTS="NONE";
+
+DEFAULT_TRAIN="input1";
+DEFAULT_EVAL="input1";
+
+# Optimizing SPEC benchmarks pays off for the long reference inputs
+OPTIMIZE_EMUL_EXEC=1

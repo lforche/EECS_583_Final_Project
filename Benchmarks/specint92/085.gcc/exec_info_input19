@@ -1,0 +1,21 @@
+ # IMPACT Public Release (www.crhc.uiuc.edu/IMPACT)            Version 2.33  #
+ # IMPACT Trimaran Release (www.trimaran.org)                  July 12, 1999 #
+###############################################################################
+#  Run 'read_exec_info --help | more' for documentation.
+#
+#  Source of this file's information:
+#     SPEC (http://www.spec.org/)
+#
+#  Revision history for this file:
+#     3/99  Created by Erik Nystrom (www.crhc.uiuc.edu/IMPACT)
+###############################################################################
+
+DESCRIPTION="SPEC92/benchspec/085.cc1/input.ref, varasm";
+SETUP="ln -sf ${BENCH_DIR}/input19/varasm.i .";
+PREFIX="";
+ARGS="varasm.i -quiet -O -o varasm.s";
+CHECK="cp varasm.s ${RESULT_FILE}; diff ${RESULT_FILE} ${BENCH_DIR}/output19/varasm.s"
+CLEANUP="rm -f varasm.i varasm.s";
+
+# Around 37,000,000 instructions in .O_im_p, simulate approx. 10,000,000
+SKIP="540000";

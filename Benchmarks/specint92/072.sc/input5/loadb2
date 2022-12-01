@@ -1,0 +1,889 @@
+l>SPECmark
+l>Thruput
+jhhh>Benchmark
+j>No and name
+>No & name
+kirl>Reference
+j>Time
+j>Seconds
+kkl/cc1:c3 b1:b3
+jjjhh<001.gcc
+j<008.espresso
+j<013.spice2g6
+j<015.doduc
+j<020.li
+<020.nasa7
+j<022.k
+<022.li
+j<023.eqntott
+j<030.matriz
+<030.matrix300
+j<042.fpppp
+j<047.tomcatv
+icdcliclicdclicjjkkkkkkkkkkkhn1481
+j2266
+j23951
+j1863
+j20093
+j6206
+j1101
+j4525
+j3038
+j2649
+lkkkkkkkkkirjkhhh===========
+"==========
+jlkchmlclclclcj=2*c5
+mjcjcjcjcjcjcjcjcjc@kkkkkkkkkhh1482
+@jjjjjjjjjjhh"==========
+mlclclclcjhhhh<Geometric Mean
+ll=@pow(@prod(c5:c14),0.1)
+mllc@llkkkkkkkkkkkkkkkk<SPECmark template
+jj>Time
+j>Seconds
+lk>SPEC
+ljh>ratio
+jh1
+mjcjcjcjcjcjcjcjcjcjckkkkkkkkkk"==========
+hxl"==========
+hmlchxlmlcjjjjjjjjjjjhclckkkkkkkkkk=$c$5/g5
+j=$c$6/g6
+j=$c$7/g7
+jhl=$c$8/g8
+j$c$9
+=1
+
+
+ljkhx=1
+lkj=$c$9/g9
+j=$c$10/g10
+j=$c$11/g11
+j$c$12
+x=1
+l=$c$12/g12
+j=$c$13/g13
+j$c$14
+x=1
+l=$c$14/g14
+jjjjjkkkkkkkkkkkkkkjjjjjjjjjjjhjkhhmllclc@llkkkkkkkkkkkkkkkk<Thu
+<Thruput template
+jj/cf2:
+/cj2:k4 g2:h4
+l>Thruput
+mkcjjmkcj<1@
+>1@
+jjh1
+mjcjcjcjcjcjcjcjcjcjhhmllclcjhhhmllclckkkkkkkkkkk=$e$5/j5
+j$e$6/
+l=$e$6/j6
+j=$e$7/j7
+j=$e$8/j8
+j=$e$9/j9
+j=$e$10/j10
+j=$e$11/j11
+j=$e$12/j12
+j=$e$13/j13
+j$l=$e$14/j14
+kkkkkkkkkjjjjjjjjj@kjjjga20
+/ca20:b36 g0:h16
+"V2,I2   page 4
+jjjjkkkkjjjjj97
+j131
+j1760
+j118
+j1112
+j305
+j64
+j332
+j174
+j187
+jjj@gd20
+/cd20:e36 g0:h16
+l>V2,I2   page 5
+xh>V2,I2   page 5
+jjjjj77
+j126
+j1768
+j109
+j1094
+j260
+j60
+j340
+j152
+j157
+@gg20
+/cg20:h36 g0:h16
+>V2,I2   page 6
+>V2,I2   page 6
+jljhjjj79
+j125
+j1769
+j107
+j1090
+j260
+j60
+j338
+j151
+j155
+@gj20
+/cj20:k36 g0:h16
+>V2,I2   page 7
+jjjjj33.3
+j51.8
+j634.9
+j48.7
+j507.2
+j138.2
+hlj30.9
+j86.4
+j58.2
+j71.9
+@gm20
+/cm20:n36 g0:h16
+>V2,I2   page 8
+jjjjjlh110.7
+j163.6
+j2255.7
+j167.8
+j1600.3
+j400.8
+j82.6
+j458
+j249.5
+j248
+@gp20
+/cp20:q36 g0:h16
+>V2,I2 page 9
+>V2,I2   page 9
+jjjjj82
+j135.4
+j2386.6
+j126.8
+j1397.6
+j379.8
+j67.8
+j465.5
+j189.2
+j245.8
+@gs20
+/cs20:t36 g0:h16
+>V2,I2   page 12
+jljhjjj153.6
+j176.5
+j2934.9
+j277
+j2270
+j479.6
+j106.5
+j440.4
+j380.4
+j329.4
+@gv20
+/cv20:w36 g0:h16
+>V2,I2   page 16
+jjjjj196
+j254
+j3417.5
+j224.1
+j2068.2
+j641
+j125
+j627
+j339.9
+j363
+@gy20
+/cy20:z36 g0:h16
+>V2,I2   page 17
+ljjjjjh136
+j189
+j2523
+j164.8
+j1525.1
+j473
+j98
+j459.8
+j242.9
+j268.1
+@llgab20
+/cab20:ac36 g0:h16
+>U
+>V2,I2   page 18
+jljjjjh134.6
+j160.6
+j2632.5
+j145.6
+j1568.7
+j509.7
+j81.1
+j434
+j227.2
+j268.2
+@gae20
+/cae20:af36 g0:h16
+>V2,I2   page 24
+jjjjj116
+j175
+j2016
+j81
+j982
+j560
+j99
+j206
+j95
+j133
+@gah20
+lh/cah20:ai36 g0:h16
+>V2,I2   page 28
+jjjjj108
+j139.3
+j1208.7
+j86.3
+j756
+j397
+j62.1
+j258.4
+j70.8
+j46.9
+@gak
+gak20
+/cak20:al36 g0:h16
+>V2,I2   page 29
+jjjjj108.8
+j139.3
+j1209.3
+j86.8
+j752.8
+j397
+j61
+j258.4
+j71.2
+j46.7
+@llllga40
+/ca40:b56 g0:h16
+>V2,I2   page 30
+jjjjj83.3
+j109.4
+j868
+j67.3
+j566.4
+j313.3
+j47.8
+j207.6
+j55.5
+j35
+jjj@ga0
+gd40
+/cd40:e56 g0:h16
+>V2,I2   page 31
+jjjjj70.6
+j91.1
+j721.8
+j56.2
+j463.1
+j261.8
+j41.2
+j170.9
+j46.2
+j29.1
+jjj@gg40
+/cg40:h56 g0:h16
+>V2Ii
+>V2,I2 p
+>V2,I2   page 32
+jjjljhj84.5
+j109.4
+j867.5
+j67.3
+j549.1
+j313.3
+j48.9
+j202.1
+j55.5
+j34.8
+@gj40
+/cj40:k56 g0:h16
+>V2,I2   page 33
+jjjjj84.8
+j109.4
+j868.2
+j67.3
+j566.5
+j313.3
+j47.9
+j207.6
+j55.5
+j34.8
+j@gm40
+lh/cm40:n56 g0:h16
+>V2,I2   page 34
+jjjjj172.0
+j192
+j2657
+j189
+j1516
+j438
+j96
+j470
+j626
+j241
+@gp40
+>V2,I2   page 35
+/cp4)
+/cP40:q56 g0:h16
+>V2,I2   page 35
+jjjjj78
+j124
+j1984
+j106
+j1094
+j261
+j60
+j340
+j149
+j150
+@gs40
+lh/cs40:t56 g0:h16
+>V2,I2   page 36
+jjjjj33.3
+j51.8
+j634.9
+j48.7
+j507.2
+j138.2
+j30.9
+j86.4
+j58.2
+71.9
+58.2
+j71.9
+@g v40
+/c v40:w56 g0:h16
+>V2,I2   page 39
+jjjjj110.7
+j163.6
+j2255.7
+j167.8
+j1600.3
+j400.8
+j82.6
+j458
+j249.5
+249
+248
+249.5
+j248
+@gy40
+ljkh/cy40:z56 g0:h16
+>V2,I2   page 40
+jjjjj82
+j135.4
+j2386.6
+j126.8
+j1397.6
+j379.8
+j67.8
+j465.5
+j189.2
+j245.8
+@gab40
+/cas40:
+/cab40:ac56 g0:h16
+>V2,I2   page 47
+jjjjj83.2
+j111.8
+j1626.6
+j94.8
+j3129.6
+319.6
+j4
+342.3
+j60.4
+j41.7
+j104.4
+j42.8
+@gan20
+jjjjjjjjjjjjjjjjga60
+/ca60:b66 j0:k16
+>V2,I2   page 10
+jjjl>2@
+jjh150
+j196
+j3531
+j183
+j2809
+j471
+j102.1
+j696
+j257
+j350
+jjj@gd60
+/cd60:e66 j0:k16
+>V2,I2   page 11
+jjjl>4@
+hjj159.6
+j196
+j3780
+j195
+j3324
+j483
+j105
+j885
+j255
+j468
+@gg60
+lh/cg60:h66
+/cg60:h66 h0:k16
+/cg60:h66 j0:k16
+>V2,I2   page 13
+jjjl>2@
+hjj348
+j371
+j6657
+j560
+j5956
+j984
+j216
+j1047
+j808
+j744
+@gj60
+h/xi60:j66
+/xi60:j66
+jjjjjjj/xi60:j76
+kkkkkkkl/cj60:k76 j0:k16
+>V2,I2   page 14
+jjjl>2@
+hjj400
+j446
+j7951
+j670
+j6981
+j1180
+j255
+1154
+255
+j1154
+j934
+j870
+@gm60
+/cm60:n76 j0:k16
+lh>V2,I2   page 15
+jjlj>2@
+hjj232
+j270
+j4668
+j421
+j3904
+j742
+j163
+j725
+j560
+j520
+@gp60
+/cp60:q76 j0:k16
+>V2,I2   page 20
+jjjjj340
+j302
+j6016
+j280
+j4208
+j1138
+j164
+j1121
+j428
+j603
+@kkkkk4308
+@gs60
+lh/cs60:t76 j0:k16
+>V2,I2   page 21
+jjjl>4@
+hjj391
+j313
+j6140
+j298
+j4516
+j1329
+j189
+j1229
+j514
+j620
+@gv60
+/cv60:w76 k0
+/cv60:w76 j0:k16
+>V2,I2   page 22
+jjjjj452
+j708
+j7522
+j503
+j4912
+j1682
+j331
+j1425
+j809
+j739
+@gy60
+lh/cy60:z76 j0:k16
+>V2,I2   page 23
+jjjl>6@
+hjj523
+j766
+j7971
+j504
+j593`1
+5931
+j2236
+j333
+j1529
+j942
+j819
+@gab60
+/cab60:ac76 j0:k16
+>V2,I2   page 25
+jjjl>2@
+hjj247
+j357
+j4178
+j166
+j209
+2079
+j1145
+j204
+j465
+j196
+j280
+@gae60
+lh/cae60:af76 j0:k16
+>V2,I2   page 26
+jjjl>3@
+hjj251
+j357
+j4231
+j166
+j2172
+j1154
+j204
+j520
+j210
+j2890
+289
+@gah60
+/cah60:ai76 j0:k16
+>V2,I2   page 27
+jjjl>4@
+hjj258
+j358
+j4286
+j167
+j2296
+j1165
+j205
+j590
+j248
+j304
+@bak60
+gak60
+lh/cak60:al76 j0:k16
+>V2,I2   page 37
+jjjl>2@
+hjj184
+j251
+j4183
+j390
+j33089
+3309
+j665
+j141
+j694
+j482
+j483
+@ga80
+/ca80:b96 j0:k16
+>V2,I2   page 38
+jjjl>4@
+hjj264
+j281
+j5525
+j426
+j5681
+j742
+j147
+j1215
+j743
+j599
+jjj@gd80
+/cd80:e96 j0:k16
+>V2,I2  page 41
+jjjl>2@
+hjj150
+j196
+j3531
+j183
+j2809
+j471
+j102.1
+j696
+j257
+j350
+@gg80
+lh/cg80:h96 j0:k16
+>V2,I2   page 42
+jjjl>4@
+hjj159.6
+j196
+j3780
+j195
+j3324
+j483
+j105
+j885
+j255
+j468
+@gj80
+/cj80:k96 j0:k16
+>V2,I2   page 43
+jjjlhjj152
+j283
+j3196
+j313
+j2263
+j696
+j130
+j399
+j357
+j428
+@gm80
+lh/cm80:n96 j0:k15
+/cm80:n96 j0:k16
+>V2,I2  page 44
+>V2,I2   page 44
+jjjl>2@
+hjj171
+j285
+j3382
+j322
+kjj2387
+j962
+j133
+j423
+j388
+j438
+@gp80
+/cp80:q96 j0:k16
+>V2,I2   page 45
+jjjjkl>3@
+hjj204
+j287
+j3563
+j341
+j2701
+j1478
+j138
+j435
+j411
+j474
+@gs80
+lh/cs80:t96 j0:k16
+>V2,I2   page 46
+jjjl>4@
+hjj239
+j293
+j3515
+j325
+j2601
+j1771
+j141
+j438
+j379
+j453
+@g v80
+/cv80:w96 j0:k16
+>V2,I2   page 48
+jjjl>2@
+hjj177.5
+j233.3
+j3486.8
+j202.2
+hlj777.6
+j721.7
+j126.5
+j128.5
+j225.2
+j110.3
+@kkkkkkkkkkkkkkkkkklllllllga100
+/ca100:a116 b20:b36
+jjjjjjjjjjjjjjjjjkkk@ga100
+/xa100:a116
+ga0
+ga100
+/ca100:a116 b20:b36
+jjjjj=b25
+mjcjcjcjcjcjcjcjcjcjjcj@/cb100:b116 e20:e36
+lkkkkkkkkkkkk=e25
+mjcjcjcjcjcjcjcjcjcjjc@/cc100:c116 h20:h36
+lkkkkkkkkkkk=h25
+mjcjcjcjcjcjcjcjcjcjjc@/cd100:d116 k20:k36
+lkkkkkkkkkkk=k25
+mjcjcjcjcjcjcjcjcjcjjc@/ce100:e116 n20:36
+/ce100:e116
+/ce100:e116 n20:n26
+/ce100:e116 n20:n36
+lkkkkkkkkkkk=n25
+mjcjcjcjcjcjcjcjcjcjjc@/cf100:f116 q20:q36
+lkkkkkkkkkkk=q25
+mjcjcjcjcjcjcjcjcjcjjc@/cg100:g116 t20:t36
+lkkkkkkkkkkk=t25
+jkmjcjcjcjcjcjcjcjcjcjjc@l/ch100:h116 w20:w36
+kkkkkkkkkkk=w25
+mjcjcjcjcjcjcjcjcjcjjc@/ci100:i116 z20:z36
+gi105
+gp105
+hhhhhhhhlhl-
+=z25
+mjcjcjcjcjcjcjcjcjcjjc@gj105
+/cj100:j116 ac20:ac36
+=ac25
+mjcjcjcjcjcjcjcjcjcjjc@gk105
+/ck100:k116 af20:af36
+=af25
+mjcjcjcjcjcjcjcjcjcjjc@gl105
+/cl100:l116 ai20:ai36
+=ai25
+mjcjcjcjcjcjcjcjcjcjjc@gm105
+/cm100:m116 al20:al36
+=al25
+mjcjcjcjcjcjcjcjcjcjjc@gn105
+/cn100:n116 b40:b56
+=b45
+mjcjcjcjcjcjcjcjcjcjjc@gq105
+go105
+/co100:o116 e40:e56
+=e45
+mjcjcjcjcjcjcjcjcjcjjc@gp105
+/cp100:p116 h40:h56
+=h45
+mjcjcjcjcjcjcjcjcjcjjc@gq105
+/cq100:q116 k40:k56
+=k45
+mjcjcjcjcjcjcjcjcjcjjc@gr105
+/cr100:r116 n40:n56
+=n45
+mjcjcjcjcjcjcjcjcjcjjc@gs105
+/cs100:s116 q45
+/cs100:s116 q40:q56
+=q45
+mjcjcjcjcjcjcjcjcjcjjc@gt105
+/ct100:t116 t40:t56
+=t45
+mjcjcjcjcjcjcjcjcjcjjc@gw105
+hh/cu100:u116 w40:w56
+=w45
+mjcjcjcjcjcjcjcjcjcjjc@gv105
+/cv100:v116 z40:z56
+=z45
+mjcjcjcjcjcjcjcjcjcjjc@gw105
+/cw100:w116 ac40:ac56
+=ac45
+mjcjcjcjcjcjcjcjcjcjjc@gy100
+/cy100:y116 w100:w116
+j>Average
+jjjj=@avg(a105:w105)
+@mjcjcjcjcjcjcjcjcjcjjc@gz100
+/cz100:z116 w100:w116
+>Standard
+j>Deviation
+jjjj=@stddev(a105:w105)
+@mjcjcjcjcjcjcjcjcjcjjc@llgaa100
+/caa100:aa116 w100:w116
+j>Max
+jjjj=@max(a105:w105)
+@mjcjcjcjcjcjcjcjcjcjjc@gab100
+/cab100:ab116 w100:w116
+j>Min
+jjjj=@min(a105:w105)
+@mjcjcjcjcjcjcjcjcjcjjc@llgao
+ga0
+gq100
+jjjjjga120
+/ca120:a136 b60:b76
+jjjjj=b65
+mjcjcjcjcjcjcjcjcjcjjcj@gb125
+/cb120:b136 e60:e76
+=e65
+mjcjcjcjcjcjcjcjcjcjjc@gc125
+/cc120:c136 h60:h76
+=h65
+mjcjcjcjcjcjcjcjcjcjjc@gd125
+/cd120:d136 k60K76
+/cd120:d136 k60:k76
+=k65
+mjcjcjcjcjcjcjcjcjcjjc@ge125
+/ce120:e136 n60:n76
+=n65
+mjcjcjcjcjcjcjcjcjcjjc@gf125
+/cf120:f136 q60:q76
+=q65
+mjcjcjcjcjcjcjcjcjcjjc@gg125
+/cg120:g136 t60:t76
+=t65
+mjcjcjcjcjcjcjcjcjcjjc@gj125
+hh/ch120:h136 w60:w76
+=w65
+mjcjcjcjcjcjcjcjcjcjjc@gi125
+/ci120:i136 z60:z76
+=z65
+mjcjcjcjcjcjcjcjcjcjjc@gj125
+/cj120:j136 ac60:ac76
+=ac65
+mjcjcjcjcjcjcjcjcjcjjc@gk125
+/ck120:k136 af60:af76
+=af65
+mjcjcjcjcjcjcjcjcjcjjc@kkc@@kkkkkkkkkjjjjjjjjjjjkkgaf70
+jjjjkj=$e$14/ae74
+@gl125
+/cl120:l136 ai60:ai76
+=ai65
+mjcjcjcjcjcjcjcjcjcjjcj@/m125
+xgm125
+/cal
+/cm125
+/cm120:m136 al60:al76
+=al65
+mjcjcjcjcjcjcjcjcjcjjc@gn125
+/cn120:n136 b80:b96
+=b85
+mjcjcjcjcjcjcjcjcjcjjc@g0125
+go125
+/co120:o136 e80:e96
+=e85
+mjcjcjcjcjcjcjcjcjcjjcj@gp125
+/cp120:p136 h80:h96
+=h85
+mjcjcjcjcjcjcjcjcjcjjc@gq125
+/cq120:136 
+/cq120:q136 k80:k96
+=k85
+mjcjcjcjcjcjcjcjcjcjjc@gp125
+gr125
+/cr120:r136 n80:n96
+=n85
+nmjcjcjcjcjcjcjcjcjcjjc@gu125
+hh/cs120:s136 q80:q96
+=q85
+mjcjcjcjcjcjcjcjcjcjjc@gt125
+/cr120:
+/ct120;
+/ct120:t136 t80:t96
+=t85
+mjcjcjcjcjcjcjcjcjcjjc@gu125
+/cw80
+/cu120:u136 w80:w96
+=w85
+mjcjcjcjcjcjcjcjcjcjjc@kkkkkkkkkkkkkkkkkkkkllllllll/cy12-0
+/cy120:ab136 y100:ab116
+jjjjjjjjjhhhhhhhhllllkkk>Thruput
+lll/cy122:
+/cy
+/cz122:ab122 y122:y122
+@ljjjjjjjjjjjjjjjga0
+/va0:an199
+Ploadb2.out
+Q

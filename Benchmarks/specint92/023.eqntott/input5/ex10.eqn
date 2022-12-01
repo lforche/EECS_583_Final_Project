@@ -1,0 +1,10 @@
+/*
+ *
+ *	Copyright (C) 1981, Regents of the University of California
+ *
+ *	All rights reserved
+ *
+ */
+
+f1 = a & (b & c | a) & b & !c;
+f2 = a & b & c | a &(b & !c1);
