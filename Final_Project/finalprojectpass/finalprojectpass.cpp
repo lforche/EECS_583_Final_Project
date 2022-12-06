@@ -25,11 +25,11 @@ namespace{
 		virtual bool runOnFunction(Function &F) override{
             vector<Instruction*> storeInst, loadInst;
             AAResults& AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
-            LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
+            // LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
 
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                for(LoopInfo::iterator L = LI.begin(), e = LI.end(); L!=e; ++L) {
-                    if((*L)->contains(&*bb)){
+                // for(LoopInfo::iterator L = LI.begin(), e = LI.end(); L!=e; ++L) {
+                //     if((*L)->contains(&*bb)){
                         for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
                             // errs() << (*i) << "\n";
                             if (isa<GetElementPtrInst>(i)) {
@@ -43,22 +43,20 @@ namespace{
                                 } 
                             }
                         }
-                        errs() << "-----\n";
-                    }
-                }
+                    //     errs() << "-----\n";
+                    // }
+                // }
             }
 
             if (storeInst.size() > 0) {
-                // errs() << "---------\n";
+                errs() << "---------\n";
                 for (auto sto : storeInst) {
                     for (auto lo : loadInst) {
-                        // errs() << *sto << "\t" << *lo << "---a---\n" << *(sto->getOperand(1)) << "\t" << *(lo->getOperand(0)) << "---b---\n";
+                        errs() << *sto << "\t" << *lo << "\n"; // << *(sto->getOperand(1)) << "\t" << *(lo->getOperand(0)) << "\n";
                         if (AA.isMustAlias(sto->getOperand(1), lo->getOperand(0)))
                             errs() << AA.alias(sto->getOperand(1), lo->getOperand(0)) << "\n";
-                        else if (!AA.isNoAlias(sto->getOperand(1), lo->getOperand(0))) {
+                        else if (AA.isNoAlias(sto->getOperand(1), lo->getOperand(0))) {
                             errs() << AA.alias(sto->getOperand(1), lo->getOperand(0)) << "\n";
-                            // errs() << *(sto->getParent()) << "\n";
-                            break;
                         } else
                             errs() << AA.alias(sto->getOperand(1), lo->getOperand(0)) << "\n"; 
                     }
@@ -69,7 +67,7 @@ namespace{
 
         void getAnalysisUsage(AnalysisUsage &AU) const override {
             AU.addRequired<AAResultsWrapperPass>();
-            AU.addRequired<LoopInfoWrapperPass>();
+            // AU.addRequired<LoopInfoWrapperPass>();
         }
 	};
 }
