@@ -1,3 +1,6 @@
+#include "llvm/Analysis/LoopInfo.h"
+#include "llvm/Analysis/LoopIterator.h"
+#include "llvm/Analysis/LoopPass.h"
 #include "llvm/Pass.h"
 #include "llvm/IR/Function.h"
 #include "llvm/Support/raw_ostream.h"
@@ -8,6 +11,7 @@
 #include "llvm/IR/InstrTypes.h"
 #include "llvm/Analysis/AliasAnalysis.h"
 #include <iostream>
+#include "llvm/Analysis/LoopAccessAnalysis.h"
 
 using namespace std;
 using namespace llvm;
@@ -21,18 +25,25 @@ namespace{
 		virtual bool runOnFunction(Function &F) override{
             vector<Instruction*> storeInst, loadInst;
             AAResults& AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
+            LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
 
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    if (isa<GetElementPtrInst>(i)) {
-                        if (isa<StoreInst>((&(*(i)))->getNextNode())) {
-                            // errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(1)) << "\n";
-                            storeInst.push_back((*i).getNextNode());
+                for(LoopInfo::iterator L = LI.begin(), e = LI.end(); L!=e; ++L) {
+                    if((*L)->contains(&*bb)){
+                        for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
+                            // errs() << (*i) << "\n";
+                            if (isa<GetElementPtrInst>(i)) {
+                                if (isa<StoreInst>((&(*(i)))->getNextNode())) {
+                                    errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(1)) << "\n";
+                                    storeInst.push_back((*i).getNextNode());
+                                }
+                                else if (isa<LoadInst>((&(*(i)))->getNextNode())) {
+                                    errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(0)) << "\n";
+                                    loadInst.push_back((*i).getNextNode());
+                                } 
+                            }
                         }
-                        else if (isa<LoadInst>((&(*(i)))->getNextNode())) {
-                            // errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(0)) << "\n";
-                            loadInst.push_back((*i).getNextNode());
-                        } 
+                        errs() << "-----\n";
                     }
                 }
             }
@@ -41,13 +52,15 @@ namespace{
                 // errs() << "---------\n";
                 for (auto sto : storeInst) {
                     for (auto lo : loadInst) {
-                        errs() << *sto << "\t" << *lo << "---a---\n" << *(sto->getOperand(1)) << "\t" << *(lo->getOperand(0)) << "---b---\n";
+                        // errs() << *sto << "\t" << *lo << "---a---\n" << *(sto->getOperand(1)) << "\t" << *(lo->getOperand(0)) << "---b---\n";
                         if (AA.isMustAlias(sto->getOperand(1), lo->getOperand(0)))
-                            errs() << "yes" << "\n";
-                        else if (AA.isNoAlias(sto->getOperand(1), lo->getOperand(0)))
-                            errs() << "nah" << "\n";
-                        else
-                            errs() << "maybe" << "\n"; 
+                            errs() << AA.alias(sto->getOperand(1), lo->getOperand(0)) << "\n";
+                        else if (!AA.isNoAlias(sto->getOperand(1), lo->getOperand(0))) {
+                            errs() << AA.alias(sto->getOperand(1), lo->getOperand(0)) << "\n";
+                            // errs() << *(sto->getParent()) << "\n";
+                            break;
+                        } else
+                            errs() << AA.alias(sto->getOperand(1), lo->getOperand(0)) << "\n"; 
                     }
                 }
             }
@@ -55,7 +68,8 @@ namespace{
 		}
 
         void getAnalysisUsage(AnalysisUsage &AU) const override {
-            AU.addRequired<llvm::AAResultsWrapperPass>();
+            AU.addRequired<AAResultsWrapperPass>();
+            AU.addRequired<LoopInfoWrapperPass>();
         }
 	};
 }
