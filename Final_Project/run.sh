@@ -33,6 +33,15 @@ fi
 cleanup
 # Prepare input to run
 setup
+# # Convert source code to bitcode (IR)
+# clang -emit-llvm -c ${1}.c -o ${1}.bc
+# # Canonicalize natural loops
+# opt -enable-new-pm=0 -loop-simplify ${1}.bc -o ${1}.ls.bc
+# # Instrument profiler
+# opt -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.ls.bc -o ${1}.ls.prof.bc
+# # Generate binary executable with profiler embedded
+# clang -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
+
 # Convert source code to bitcode (IR)
 clang -O2 -emit-llvm -c ${1}.c -o ${1}.bc
 # Canonicalize natural loops

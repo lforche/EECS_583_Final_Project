@@ -15,6 +15,7 @@
 #include "llvm/Analysis/AliasAnalysis.h"
 #include <iostream>
 #include "llvm/Analysis/LoopAccessAnalysis.h"
+#include "llvm/Analysis/ScalarEvolution.h"
 
 using namespace std;
 using namespace llvm;
@@ -22,7 +23,16 @@ namespace{
 	struct FinalProject: public FunctionPass {
         static char ID;
 
-		FinalProject() : FunctionPass(ID) {
+		FinalProject() : FunctionPass(ID) {}
+        
+        void getAnalysisUsage(AnalysisUsage &AU) const override {
+            AU.addRequired<AAResultsWrapperPass>();
+            AU.addRequired<LoopInfoWrapperPass>();
+            AU.addPreserved<LoopInfoWrapperPass>();
+            AU.addRequired<LoopAccessLegacyAnalysis>();
+            AU.addRequired<DominatorTreeWrapperPass>();
+            AU.addPreserved<DominatorTreeWrapperPass>();
+            AU.addRequired<ScalarEvolutionWrapperPass>();
         }
 
 		virtual bool runOnFunction(Function &F) override{
@@ -31,44 +41,28 @@ namespace{
             AAResults& AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
             LoopInfo& LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
             ScalarEvolution& SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
-
+            LoopAccessLegacyAnalysis* LAA = &getAnalysis<LoopAccessLegacyAnalysis>();
+            DominatorTree& DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
+            
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    if (isa<GetElementPtrInst>(i) && LI.getLoopFor(&(*bb)) != NULL) {
-                        if (isa<StoreInst>((&(*(i)))->getNextNode())) {
-                            errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(1)) << "\n";
-                            storeInst.push_back((*i).getNextNode());
-                        }
-                        else if (isa<LoadInst>((&(*(i)))->getNextNode())) {
-                            errs() << *((*i).getNextNode()) << "\t" << *(i->getNextNode()->getOperand(0)) << "\n";
-                            loadInst.push_back((*i).getNextNode());
-                        } 
+                // for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
+                    Loop* CurLoop = LI.getLoopFor(&(*bb));
+                    if (CurLoop != NULL) {
+                        // if (!CurLoop->isLoopSimplifyForm() || !CurLoop->isRotatedForm() || !CurLoop->getExitingBlock())
+                        //     continue;
+                        const LoopAccessInfo& LAI = LAA->getInfo(CurLoop);
+                        errs() << CurLoop->getSubLoops().empty() << "\t" << *(bb->begin()) << "\n";
+                        // if (!LAI.hasConvergentOp() && (LAI.getNumRuntimePointerChecks() || !LAI.getPSE().getUnionPredicate().isAlwaysTrue())) {
+                            // errs() << LAI->getRuntimePointerChecking()->getNumberOfChecks() << "\n";
+                            // LoopVersioning LVer(LAI, LAI.getRuntimePointerChecking()->getChecks(), CurLoop, &LI, &DT, &SE);
+                            // LVer.versionLoop();
+                            // LVer.annotateLoopWithNoAlias();
+                        // }
                     }
-                }
+                // }
             }
-
-            if (storeInst.size() > 0 && loadInst.size() > 0) {
-                errs() << "---------\n";
-                for (auto sto : storeInst) {
-                    for (auto lo : loadInst) {
-                        if (!AA.isMustAlias(sto->getOperand(1), lo->getOperand(0)) && !AA.isNoAlias(sto->getOperand(1), lo->getOperand(0))) {
-                            errs() << *sto << "\t" << *lo << "\n"; 
-                            errs() << AA.alias(sto->getOperand(1), lo->getOperand(0)) << "\n"; 
-                            Loop* L = LI.getLoopFor((*sto).getParent());
-                        }
-                    }
-                }
-            }
-			return false; 
+			return true; 
 		}
-
-        void getAnalysisUsage(AnalysisUsage &AU) const override {
-            AU.addRequired<AAResultsWrapperPass>();
-            AU.addRequired<LoopInfoWrapperPass>();
-            AU.addRequired<LoopAccessLegacyAnalysis>();
-            AU.addPreserved<DominatorTreeWrapperPass>();
-            AU.addRequired<ScalarEvolutionWrapperPass>();
-        }
 	};
 }
 
