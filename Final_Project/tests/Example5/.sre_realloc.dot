@@ -1,0 +1,9 @@
+digraph "CFG for 'sre_realloc' function" {
+	label="CFG for 'sre_realloc' function";
+
+	Node0x555684a06800 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{entry:\l  %call = tail call i8* @realloc(i8* noundef %p, i64 noundef %size) #8\l  %cmp = icmp eq i8* %call, null\l  br i1 %cmp, label %if.then, label %if.end\l|{<s0>T|<s1>F}}"];
+	Node0x555684a06800:s0 -> Node0x5556849f4ab0;
+	Node0x555684a06800:s1 -> Node0x5556849f4b00;
+	Node0x5556849f4ab0 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#6687ed70",label="{if.then:                                          \l  %call1 = tail call i32 (i8*, ...) @printf(i8* noundef nonnull\l... dereferenceable(1) getelementptr inbounds ([31 x i8], [31 x i8]* @.str.1, i64\l... 0, i64 0))\l  tail call void @exit(i32 noundef 1) #9\l  unreachable\l}"];
+	Node0x5556849f4b00 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{if.end:                                           \l  ret i8* %call\l}"];
+}
