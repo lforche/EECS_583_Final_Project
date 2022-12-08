@@ -33,19 +33,29 @@ fi
 cleanup
 # Prepare input to run
 setup
+# # Convert source code to bitcode (IR)
+# clang -emit-llvm -c ${1}.c -o ${1}.bc
+# # Canonicalize natural loops
+# opt -enable-new-pm=0 -loop-simplify ${1}.bc -o ${1}.ls.bc
+# # Instrument profiler
+# opt -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.ls.bc -o ${1}.ls.prof.bc
+# # Generate binary executable with profiler embedded
+# clang -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
+
 # Convert source code to bitcode (IR)
-# This approach has an issue with -O2, so we are going to stick with default optimization level (-O0)
-clang -emit-llvm -c ${BENCH} -o ${1}.bc 
+clang -O2 -emit-llvm -c ${1}.c -o ${1}.bc
+# Canonicalize natural loops
+opt -O2 -enable-new-pm=0 -loop-simplify ${1}.bc -o ${1}.ls.bc
 # Instrument profiler
-opt -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.bc -o ${1}.prof.bc
+opt -O2 -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.ls.bc -o ${1}.ls.prof.bc
 # Generate binary executable with profiler embedded
-clang -fprofile-instr-generate ${1}.prof.bc -o ${1}.prof
-# Collect profiling data
+clang -O2 -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
+
+# Generate profiled data
 ./${1}.prof ${INPUT}
-# Translate raw profiling data into LLVM data format
-llvm-profdata merge -output=pgo.profdata default.profraw
+llvm-profdata merge -o ${1}.profdata default.profraw
 
 # Prepare input to run
 setup
 # Apply your pass to bitcode (IR)
-opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=pgo.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=${1}.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null

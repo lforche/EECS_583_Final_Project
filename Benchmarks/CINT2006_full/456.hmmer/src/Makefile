@@ -2,11 +2,11 @@
 
 # Include standard template for this suite
 -include ../../Makefile.defaults
-RR=/home/armandb/llvm-project/build/bin/clang
-llc=/home/armandb/llvm-project/build/bin/llc
-dis=/home/armandb/llvm-project/build/bin/llvm-dis
-opt=/home/armandb/llvm-project/build/bin/opt
-# CC=/home/armandb/llvm-project/build/bin/clang
+RR=/usr/local/bin/clang
+llc=/usr/local/bin/llc
+dis=/usr/local/bin/llvm-dis
+opt=/usr/local/bin/opt
+# CC=/usr/local/bin/clang
 CC=gcc
 
 # RR=gcc
@@ -220,7 +220,7 @@ clean:
 	rm *.o
 	rm hmmer
 # $(CC) $(CFLAGS) -c -emit-llvm -o fast_algorithms.bc -DSPEC_CPU      -DNDEBUG $(OPT)                fast_algorithms.c
-# /home/armandb/llvm_6_0_1/build/bin/llc -filetype=asm fast_algorithms.bc -o fast_algorithms.s                          #create x86 asm 
+# /home/zderosia/llvm_6_0_1/build/bin/llc -filetype=asm fast_algorithms.bc -o fast_algorithms.s                          #create x86 asm 
 # $(CC) $(CFLAGS) -c -emit-llvm -S -o fast_algorithms.ll -DSPEC_CPU      -DNDEBUG $(OPT)                fast_algorithms.c #create llvm ir from clang
 #$(CC) $(CFLAGS) -c -emit-llvm -S -o fast_algorithms.ll -DSPEC_CPU      -DNDEBUG $(OPT)                fast_algorithms.c
 #$(CC) $(CFLAGS) -c -emit-llvm -S -o fast_algorithms_novec.ll -DSPEC_CPU      -DNDEBUG $(OPT) -fno-vectorize -fno-tree-vectorize -fno-slp-vectorize               fast_algorithms.c
