@@ -1,16 +1,17 @@
 #!/bin/bash
 ### run.sh
 ### benchmark runner script
-### Locate this script at each benchmark directory. e.g, 583simple/run.sh
-### usage: ./run.sh ${benchmark_name} ${input} 
-### e.g., ./run.sh compress compress.in or ./run.sh simple or ./run.sh wc cccp.c
-### Note: Do NOT inlude inputs/ in ${input}, `./run.sh compress inputs/compress.in` will provide different results
+### Locate this script in tests directory. e.g, cd ../tests ; bash Final_Project/tests/run.sh
+### usage: for optimized code run -- bash Final_Project/tests/run.sh -opt ${Example}
+### usage: for unoptimized code run -- bash Final_Project/tests/run.sh ${Example}
 
-# PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so ### Action Required: Specify the path to your pass ###
-PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
-NAME_MYPASS=-finalproject ### Action Required: Specify the name for your pass ###
-BENCH=${1}.c
-# INPUT=${2}
+PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so 
+# PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
+
+PASS=-finalproject-performance                   # Choose either -finalproject-performance or -finalproject-control
+# PASS=-finalproject-control
+
+INPUT=${1:-opt}
 
 setup(){
 if [[ ! -z "${INPUT}" ]]; then
@@ -20,44 +21,38 @@ fi
 }
 
 cleanup(){
-rm *.profdata
 rm *.bc
 rm *.prof
-rm *.profraw
-if [[ ! -z "${INPUT}" ]]; then
-rm *.in
-rm *.in.Z
-fi
 }
 
 # clean up previous runs
 cleanup
 # Prepare input to run
 setup
-# # Convert source code to bitcode (IR)
-# clang -emit-llvm -c ${1}.c -o ${1}.bc
-# # Canonicalize natural loops
-# opt -enable-new-pm=0 -loop-simplify ${1}.bc -o ${1}.ls.bc
-# # Instrument profiler
-# opt -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.ls.bc -o ${1}.ls.prof.bc
-# # Generate binary executable with profiler embedded
-# clang -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
 
-# Convert source code to bitcode (IR)
-clang -O2 -emit-llvm -c ${1}.c -o ${1}.bc
-# Canonicalize natural loops
-opt -O2 -enable-new-pm=0 -loop-simplify ${1}.bc -o ${1}.ls.bc
-# Instrument profiler
-opt -O2 -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.ls.bc -o ${1}.ls.prof.bc
-# Generate binary executable with profiler embedded
-clang -O2 -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
-
-# Generate profiled data
-# ./${1}.prof ${INPUT}
-# llvm-profdata merge -o ${1}.profdata default.profraw
+if [ ${1} == -opt ]
+then
+clang -O2 -emit-llvm -c ${2}.c -o ${2}.bc
+opt -O2 -enable-new-pm=0 -loop-simplify ${2}.bc -o ${2}.ls.bc
+opt -O2 -enable-new-pm=0 -pgo-instr-gen -instrprof ${2}.ls.bc -o ${2}.ls.prof.bc
+clang -O2 -fprofile-instr-generate ${2}.ls.prof.bc -o ${2}.prof
 
 # Prepare input to run
 setup
 # Apply your pass to bitcode (IR)
-opt -enable-new-pm=0 -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+opt -enable-new-pm=0 --indvars -load ${PATH_MYPASS} ${PASS} < ${2}.bc > /dev/null
+# opt -enable-new-pm=0 -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${2}.bc > /dev/null
+
+else
+clang -emit-llvm -c ${1}.c -o ${1}.bc
+opt -enable-new-pm=0 -loop-simplify ${1}.bc -o ${1}.ls.bc
+opt -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.ls.bc -o ${1}.ls.prof.bc
+clang -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
+
+# Prepare input to run
+setup
+# Apply your pass to bitcode (IR)
+opt -enable-new-pm=0 --indvars -load ${PATH_MYPASS} ${PASS} < ${1}.bc > /dev/null
 # opt -enable-new-pm=0 -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+
+fi

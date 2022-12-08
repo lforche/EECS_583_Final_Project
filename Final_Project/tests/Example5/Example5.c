@@ -1,13 +1,46 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
 
 #include "Example5.h"
+
+#define currentM 10
+#define currentMaxCode 24
+#define big 300
+
+int testFunc(int L, int M, int *esc, int **msc, int **isc, int **xsc, int **mmx, int **dmx, int **imx, int **xmx);
 
 int main()
 {
 
-    // int M = ARRAY_SIZE;
+    int L = 284;
+    int M = currentM;
+    int escArr[currentM] = {0};
+    int mscArr[currentMaxCode][currentM] = {0};
+    int iscArr[currentMaxCode][currentM-1] = {0};
+    int xscArr[currentMaxCode-1][currentM-1] = {0};
+    int mmxArr[big][big] = {0};
+    int dmxArr[big][big] = {0};
+    int imxArr[big][big] = {0};
+    int xmxArr[big][big] = {0};
+
+    int *ptr, **ptrptr;
+    int myint = 0;
+    ptr = myint;
+    ptrptr = ptr;
+
+    int *esc = escArr;
+    int **msc = &mscArr;
+    int **isc = *iscArr;
+    int **xsc = *xscArr;
+    int **mmx = *mmxArr;
+    int **dmx = *dmxArr;
+    int **imx = *imxArr;
+    int **xmx = *xmxArr;
+
+    return testFunc(L, M, esc, msc, isc, xsc, mmx, dmx, imx, xmx);
     // int sc = 0;
     //int mc[ARRAY_SIZE] = {0};
     // int mpp[ARRAY_SIZE] = {0};
@@ -72,17 +105,138 @@ int main()
     //     }
     // }
 
-    struct plan7_s *temp;
-    struct dpmatrix_s *temp2;
-    struct p7trace_s ** temp3;
+
     
     // int x = P7Viterbi('h', 3, temp, temp2, temp3);
 
-    char *x;
-    char h = 'h';
-    x = &h;
-    P7Viterbi(x, 2, temp, temp2, temp3);
-    return 0;
+    /*char *x = "\030\020\b\t\017\t\000\t\020\021\r\021\b\b\017\t\000\t\t\v\r\003\006\020\t\000\004\r\t\006\021\005\021\t\r\004\a\002\n\005\016\t\021\020\021\002\020\f\t\006\f\005\000\a\017\000\b\r\017\003\t\r\f\t\004\017\021\022\003\020\023\005\003\005\002\a\016\017\005\000\004\r\a\a\000\a\b\020\003\r\n\000\017\020\000\002\023\017\017\016\003\017\016\t\t\016\a\022\005\n\021\a\021\004\021\020\n\t\017\000\003\023\003\021\002\017\021\021\023\021\b\b\t\022\017\t\017\r\020\020\t\v\021\017\020\000\005\004\017\b\t\003\017\017\020\000\000\a\r\017\t\020\n\002\003\t\f\003\005\000\t\a\017\017\023\016\004\023\020\020\t\023\005\005\f\021\020\a\023\f\020\t\006\003\t\000\022\000\021\005\005\005";
+    int L = 283;    
+    struct plan7_s myhmm = {
+        .M = 10,
+        .xsc = {{-8455,0},{-1000,-1000},{0,0},{-8455,0}},
+        .tsc = {{-31, -29, -29, -29, -29, -29, -29, -29, -29},  {-5926, -6041, -6041, -6041, -6041, -6041, -6041, -6041, -6041}, 
+                {-6974, -7087, -7087, -7087, -7087, -7087, -7087, -7087, -7087}, {-890, -890, -890, -890, -890, -890, -890, -890, -890},
+                {-1111, -1111, -1111, -1111, -1111, -1111, -1111, -1111, -1111}, {-697, -697, -697, -697, -697, -697, -697, -697, -697},
+                {-1378, -1378, -1378, -1378, -1378, -1378, -1378, -1378, -1378}},
+        .bsc = 0,
+        .msc = {0},
+        .begin = {0},
+        .isc = {0},
+        .esc = {0},
+        .p1 = 
+
+
+    };
+    struct plan7_s *hmm = &myhmm;
+    struct dpmatrix_s *mx;
+    struct p7trace_s ** ret_tr;
+
+    // hmm->xsc[0] = {{-8455,0},{-1000,-1000},{0,0},{-8455,0}};
+
+    // hmm->tsc[0] = {0};
+
+    mx->maxM = 10;
+    mx->maxN = 1;*/
+
+    // clock_t start, end;
+    // double cpu_time_used;
+    
+    // start = clock();
+    // P7Viterbi(x, L, hmm, mx, ret_tr);
+    // end = clock();
+    // cpu_time_used = ((double) (end - start));
+    // printf("%f", cpu_time_used);
+    // return 0;
+}
+
+int testFunc(int L, int M, int *esc, int **msc, int **isc, int **xsc, int **mmx, int **dmx, int **imx, int **xmx)
+{  
+    int *mc, *dc, *ic, *mpp, *dpp, *ip, *xmb, *ms, *is;
+    int *tpmm, *tpim, *tpdm, *tpdd, *tpmd, *tpmi, *tpii, *bp, *mpc, *ep;
+    int sc = 0;
+
+    for (int i = 1; i <= L; i++) {
+    mc    = mmx[i];    
+    dc    = dmx[i];
+    ic    = imx[i];
+    mpp   = mmx[i-1];
+    dpp   = dmx[i-1];
+    ip    = imx[i-1];
+    xmb   = xmx[i-1][XMB];
+    ms    = msc[i];
+    is    = isc[i];
+    mc[0] = -INFTY;
+    dc[0] = -INFTY;
+    ic[0] = -INFTY;
+
+
+    for (int k = 1; k <= M; k++) {
+        mc[k] = mpp[k-1]   + tpmm[k-1];
+
+        __asm__ volatile ("nop");
+        if ((sc = ip[k-1]  + tpim[k-1]) > mc[k])  
+            mc[k] = sc;
+        __asm__ volatile ("nop");
+        if ((sc = dpp[k-1] + tpdm[k-1]) > mc[k])  
+            mc[k] = sc;
+        __asm__ volatile ("nop");
+        if ((sc = xmb  + bp[k])         > mc[k])  
+            mc[k] = sc; 
+        __asm__ volatile ("nop");
+     
+        mc[k] += ms[k];
+
+        if (mc[k] < -INFTY) mc[k] = -INFTY;  
+
+        dc[k] = dc[k-1] + tpdd[k-1];
+        if ((sc = mc[k-1] + tpmd[k-1]) > dc[k]) dc[k] = sc;
+        if (dc[k] < -INFTY) dc[k] = -INFTY;
+        __asm__ volatile ("xchg %r13, %r13");  
+        if (k < M) {
+            ic[k] = mpp[k] + tpmi[k];
+            if ((sc = ip[k] + tpii[k]) > ic[k]) ic[k] = sc; 
+            ic[k] += is[k];
+            if (ic[k] < -INFTY) ic[k] = -INFTY; 
+        }
+    }
+
+    /* Now the special states. Order is important here.
+     * remember, C and J emissions are zero score by definition,
+     */
+                /* N state */
+    xmx[i][XMN] = -INFTY;
+    if ((sc = xmx[i-1][XMN] + xsc[XTN][LOOP]) > -INFTY)
+      xmx[i][XMN] = sc;
+
+                /* E state */
+    int xme = -INFTY;
+    mpc = mmx[i];
+    ep  = esc;
+    for (int k = 1; k <= M; k++)
+      if ((sc =  mpc[k] + ep[k]) > xme) xme = sc; 
+    xmx[i][XME] = xme;
+                /* J state */
+    xmx[i][XMJ] = -INFTY;
+    if ((sc = xmx[i-1][XMJ] + xsc[XTJ][LOOP]) > -INFTY)
+      xmx[i][XMJ] = sc;
+    if ((sc = xmx[i][XME]   + xsc[XTE][LOOP]) > xmx[i][XMJ])
+      xmx[i][XMJ] = sc;
+
+                /* B state */
+    xmx[i][XMB] = -INFTY;
+    if ((sc = xmx[i][XMN] + xsc[XTN][MOVE]) > -INFTY)
+      xmx[i][XMB] = sc;
+    if ((sc = xmx[i][XMJ] + xsc[XTJ][MOVE]) > xmx[i][XMB])
+      xmx[i][XMB] = sc;
+
+                /* C state */
+    xmx[i][XMC] = -INFTY;
+    if ((sc = xmx[i-1][XMC] + xsc[XTC][LOOP]) > -INFTY)
+      xmx[i][XMC] = sc;
+    if ((sc = xmx[i][XME] + xsc[XTE][MOVE]) > xmx[i][XMC])
+      xmx[i][XMC] = sc;
+  }
+    return sc;
 }
 
 int P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, struct p7trace_s **ret_tr)
@@ -119,7 +273,7 @@ int P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, stru
 
   /* Initializations that help icc vectorize.
    */
-  M        = hmm->M;
+  M = hmm->M;
 
   /* Recursion. Done as a pull.
    * Note some slightly wasteful boundary conditions:  
@@ -235,47 +389,47 @@ void ResizePlan7Matrix(struct dpmatrix_s *mx, int N, int M,
       if (mmx != NULL) *mmx = mx->mmx;
       if (imx != NULL) *imx = mx->imx;
       if (dmx != NULL) *dmx = mx->dmx;
-      return; 
+      Die("oof");
     }
 
-  if (N > mx->maxN) {
-    N          += mx->padN; 
-    mx->maxN    = N; 
-    mx->xmx     = (int **) ReallocOrDie (mx->xmx, sizeof(int *) * (N+1));
-    mx->mmx     = (int **) ReallocOrDie (mx->mmx, sizeof(int *) * (N+1));
-    mx->imx     = (int **) ReallocOrDie (mx->imx, sizeof(int *) * (N+1));
-    mx->dmx     = (int **) ReallocOrDie (mx->dmx, sizeof(int *) * (N+1));
-  }
+//   if (N > mx->maxN) {
+//     N          += mx->padN; 
+//     mx->maxN    = N; 
+//     mx->xmx     = (int **) ReallocOrDie (mx->xmx, sizeof(int *) * (N+1));
+//     mx->mmx     = (int **) ReallocOrDie (mx->mmx, sizeof(int *) * (N+1));
+//     mx->imx     = (int **) ReallocOrDie (mx->imx, sizeof(int *) * (N+1));
+//     mx->dmx     = (int **) ReallocOrDie (mx->dmx, sizeof(int *) * (N+1));
+//   }
 
-  if (M > mx->maxM) {
-    M += mx->padM; 
-    mx->maxM = M; 
-  }
+//   if (M > mx->maxM) {
+//     M += mx->padM; 
+//     mx->maxM = M; 
+//   }
 
-  mx->xmx_mem = ReallocOrDie (mx->xmx_mem, sizeof(int) * (N+1)*(5 + 16));
-  mx->mmx_mem = ReallocOrDie (mx->mmx_mem, sizeof(int) * (N+1)*(M+2+16));
-  mx->imx_mem = ReallocOrDie (mx->imx_mem, sizeof(int) * (N+1)*(M+2+16));
-  mx->dmx_mem = ReallocOrDie (mx->dmx_mem, sizeof(int) * (N+1)*(M+2+16));
+//   mx->xmx_mem = ReallocOrDie (mx->xmx_mem, sizeof(int) * (N+1)*(5 + 16));
+//   mx->mmx_mem = ReallocOrDie (mx->mmx_mem, sizeof(int) * (N+1)*(M+2+16));
+//   mx->imx_mem = ReallocOrDie (mx->imx_mem, sizeof(int) * (N+1)*(M+2+16));
+//   mx->dmx_mem = ReallocOrDie (mx->dmx_mem, sizeof(int) * (N+1)*(M+2+16));
   
-  mx->xmx[0] = (int *) (((((unsigned long int) mx->xmx_mem) + 15) & (~0xf)) + 12);
-  mx->mmx[0] = (int *) (((((unsigned long int) mx->mmx_mem) + 15) & (~0xf)) + 12);
-  mx->imx[0] = (int *) (((((unsigned long int) mx->imx_mem) + 15) & (~0xf)) + 12);
-  mx->dmx[0] = (int *) (((((unsigned long int) mx->dmx_mem) + 15) & (~0xf)) + 12);
+//   mx->xmx[0] = (int *) (((((unsigned long int) mx->xmx_mem) + 15) & (~0xf)) + 12);
+//   mx->mmx[0] = (int *) (((((unsigned long int) mx->mmx_mem) + 15) & (~0xf)) + 12);
+//   mx->imx[0] = (int *) (((((unsigned long int) mx->imx_mem) + 15) & (~0xf)) + 12);
+//   mx->dmx[0] = (int *) (((((unsigned long int) mx->dmx_mem) + 15) & (~0xf)) + 12);
   
-  /* And make sure the beginning of each row is aligned the same way */
-  for (i = 1; i <= N; i++)
-    {
-      mx->xmx[i] = mx->xmx[0] + i*(5+11) ; /* add 11 bytes per row, making it divisible by 4 */
-      n = 12 - (M+2)%4;
-      mx->mmx[i] = mx->mmx[0] + i*(M+2+n);
-      mx->imx[i] = mx->imx[0] + i*(M+2+n);
-      mx->dmx[i] = mx->dmx[0] + i*(M+2+n);
-    }
+//   /* And make sure the beginning of each row is aligned the same way */
+//   for (i = 1; i <= N; i++)
+//     {
+//       mx->xmx[i] = mx->xmx[0] + i*(5+11) ; /* add 11 bytes per row, making it divisible by 4 */
+//       n = 12 - (M+2)%4;
+//       mx->mmx[i] = mx->mmx[0] + i*(M+2+n);
+//       mx->imx[i] = mx->imx[0] + i*(M+2+n);
+//       mx->dmx[i] = mx->dmx[0] + i*(M+2+n);
+//     }
  
-  if (xmx != NULL) *xmx = mx->xmx;
-  if (mmx != NULL) *mmx = mx->mmx;
-  if (imx != NULL) *imx = mx->imx;
-  if (dmx != NULL) *dmx = mx->dmx;
+//   if (xmx != NULL) *xmx = mx->xmx;
+//   if (mmx != NULL) *mmx = mx->mmx;
+//   if (imx != NULL) *imx = mx->imx;
+//   if (dmx != NULL) *dmx = mx->dmx;
 }
 
 void *sre_realloc(char *file, int line, void *p, size_t size)
