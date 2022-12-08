@@ -45,30 +45,20 @@ namespace{
             
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
                 for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    if (isa<StoreInst>(*i)) {
-                        if (loadInst.size() > 0) {
-                            for (Instruction* inst : loadInst) {
-                                for (Instruction* inst2 : loadInst) {
-                                    // if (!inst->isIdenticalTo(inst2)) {
-                                        if (AA.isMustAlias(inst->getOperand(0), inst2->getOperand(0)))
-                                            errs() << "yes" << "\t" << *inst << "\t" << *inst2 << "\n";
-                                        else if (AA.isNoAlias(inst->getOperand(0), inst2->getOperand(0)))
-                                            errs() << "nah" << "\t" << *inst << "\t" << *inst2 << "\n";
-                                        else
-                                            errs() << "maybe" << "\t" << *inst << "\t" << *inst2 << "\n";
-                                        // if (count(inst.getOperand(0)->users().begin(), inst.getOperand(0)->users().end(), *i))
-                                        // errs() << count(inst->getOperand(0)->users().begin(), inst->getOperand(0)->users().end(), *i) << "\t" << count(inst2->getOperand(0)->users().begin(), inst2->getOperand(0)->users().end(), *i) << "\n";
-                                    // }
-                                }
-                            }
-                        } 
-                        loadInst.clear();
-                    }
-                    if (isa<LoadInst>(*i)) {
-                        loadInst.push_back(&*i);
-                        errs() << *i << "\n";
-                    }
+                    // get loop
+                    Loop* L = LI.getLoopFor(&(*bb));
+                    
+                    // auto loopBounds = L->getBounds(SE);
+                    
+                    // if (L != NULL && loopBounds)
+                    //     errs() << "a\n";
+                    // errs() 
+                    // if (L != NULL && loopBounds->getStepValue() != nullptr)
+                    //     errs() << *(L->getBounds(SE)->getStepValue()) << "\n";
+                    // auto loopInit = loopBounds.getPointer()->getInitialIVValue();
+                    // errs() << L->getNumBlocks() << "\n";
                 }
+                errs() << "\n\n";
             }
 			return true; 
 		}

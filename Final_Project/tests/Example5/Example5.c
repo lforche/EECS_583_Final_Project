@@ -148,7 +148,7 @@ int P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, stru
     mc[0] = -INFTY;
     dc[0] = -INFTY;
     ic[0] = -INFTY;
-    __asm__ volatile ("nop");
+    // __asm__ volatile ("nop");
     for (k = 1; k <= M; k++) {
         mc[k] = mpp[k-1]   + tpmm[k-1];
 
@@ -174,7 +174,7 @@ int P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, stru
             if (ic[k] < -INFTY) ic[k] = -INFTY; 
         }
     }
-    __asm__ volatile ("nop");
+    // __asm__ volatile ("nop");
 
     /* Now the special states. Order is important here.
      * remember, C and J emissions are zero score by definition,

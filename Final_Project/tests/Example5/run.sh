@@ -39,7 +39,7 @@ clang -O2 -fprofile-instr-generate Example5.ls.prof.bc -o Example5.prof
 setup
 # Apply your pass to bitcode (IR)
 # opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=${1}.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
-opt -enable-new-pm=0 -load ${PATH_MYPASS} ${NAME_MYPASS} < ${2}.bc > /dev/null
+opt -enable-new-pm=0 -load ${PATH_MYPASS} ${NAME_MYPASS} < Example5.bc > /dev/null
 
 opt -enable-new-pm=0 -dot-cfg Example5.bc > /dev/null
 cat .P7Viterbi.dot | dot -Tpdf > ./optimized.pdf
@@ -53,7 +53,7 @@ setup
 # Apply your pass to bitcode (IR)
 # opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=${1}.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
 # opt -enable-new-pm=0 -load ${PATH_MYPASS} ${NAME_MYPASS} < Example5.bc > /dev/null
-opt -enable-new-pm=0 -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+opt -enable-new-pm=0 -load ${PATH_MYPASS} ${NAME_MYPASS} < Example5.bc > /dev/null
 
 opt -enable-new-pm=0 -dot-cfg Example5.bc > /dev/null
 cat .P7Viterbi.dot | dot -Tpdf > ./unoptimized.pdf

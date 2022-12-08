@@ -10,7 +10,7 @@
 PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
 NAME_MYPASS=-finalproject ### Action Required: Specify the name for your pass ###
 BENCH=${1}.c
-INPUT=${2}
+# INPUT=${2}
 
 setup(){
 if [[ ! -z "${INPUT}" ]]; then
