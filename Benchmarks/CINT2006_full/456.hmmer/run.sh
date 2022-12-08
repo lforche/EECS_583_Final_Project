@@ -52,11 +52,10 @@ opt -O2 -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.ls.bc -o ${1}.ls.prof.bc
 clang -O2 -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
 
 # Generate profiled data
-# ./${1}.prof ${INPUT}
-# llvm-profdata merge -o ${1}.profdata default.profraw
+./${1}.prof ${INPUT}
+llvm-profdata merge -o ${1}.profdata default.profraw
 
 # Prepare input to run
 setup
 # Apply your pass to bitcode (IR)
-# opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=${1}.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
-opt -enable-new-pm=0 -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=${1}.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
