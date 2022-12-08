@@ -36,8 +36,7 @@ namespace{
         }
 
 		virtual bool runOnFunction(Function &F) override{
-            vector<Instruction*> storeInst, loadInst;
-            vector<Loop*> cloneLoop;
+            vector<Instruction*> loadInst;
             AAResults& AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
             LoopInfo& LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
             ScalarEvolution& SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
@@ -45,21 +44,31 @@ namespace{
             DominatorTree& DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
             
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                // for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    Loop* CurLoop = LI.getLoopFor(&(*bb));
-                    if (CurLoop != NULL) {
-                        // if (!CurLoop->isLoopSimplifyForm() || !CurLoop->isRotatedForm() || !CurLoop->getExitingBlock())
-                        //     continue;
-                        const LoopAccessInfo& LAI = LAA->getInfo(CurLoop);
-                        errs() << CurLoop->getSubLoops().empty() << "\t" << *(bb->begin()) << "\n";
-                        // if (!LAI.hasConvergentOp() && (LAI.getNumRuntimePointerChecks() || !LAI.getPSE().getUnionPredicate().isAlwaysTrue())) {
-                            // errs() << LAI->getRuntimePointerChecking()->getNumberOfChecks() << "\n";
-                            // LoopVersioning LVer(LAI, LAI.getRuntimePointerChecking()->getChecks(), CurLoop, &LI, &DT, &SE);
-                            // LVer.versionLoop();
-                            // LVer.annotateLoopWithNoAlias();
-                        // }
+                for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
+                    if (isa<StoreInst>(*i)) {
+                        if (loadInst.size() > 0) {
+                            for (Instruction* inst : loadInst) {
+                                for (Instruction* inst2 : loadInst) {
+                                    // if (!inst->isIdenticalTo(inst2)) {
+                                        if (AA.isMustAlias(inst->getOperand(0), inst2->getOperand(0)))
+                                            errs() << "yes" << "\t" << *inst << "\t" << *inst2 << "\n";
+                                        else if (AA.isNoAlias(inst->getOperand(0), inst2->getOperand(0)))
+                                            errs() << "nah" << "\t" << *inst << "\t" << *inst2 << "\n";
+                                        else
+                                            errs() << "maybe" << "\t" << *inst << "\t" << *inst2 << "\n";
+                                        // if (count(inst.getOperand(0)->users().begin(), inst.getOperand(0)->users().end(), *i))
+                                        // errs() << count(inst->getOperand(0)->users().begin(), inst->getOperand(0)->users().end(), *i) << "\t" << count(inst2->getOperand(0)->users().begin(), inst2->getOperand(0)->users().end(), *i) << "\n";
+                                    // }
+                                }
+                            }
+                        } 
+                        loadInst.clear();
                     }
-                // }
+                    if (isa<LoadInst>(*i)) {
+                        loadInst.push_back(&*i);
+                        errs() << *i << "\n";
+                    }
+                }
             }
 			return true; 
 		}

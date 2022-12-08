@@ -6,7 +6,8 @@
 ### e.g., ./run.sh compress compress.in or ./run.sh simple or ./run.sh wc cccp.c
 ### Note: Do NOT inlude inputs/ in ${input}, `./run.sh compress inputs/compress.in` will provide different results
 
-PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so ### Action Required: Specify the path to your pass ###
+# PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so ### Action Required: Specify the path to your pass ###
+PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
 NAME_MYPASS=-finalproject ### Action Required: Specify the name for your pass ###
 BENCH=${1}.c
 INPUT=${2}
@@ -58,5 +59,5 @@ clang -O2 -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
 # Prepare input to run
 setup
 # Apply your pass to bitcode (IR)
-# opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=${1}.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
-opt -enable-new-pm=0 -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+opt -enable-new-pm=0 -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+# opt -enable-new-pm=0 -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
