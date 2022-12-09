@@ -13,3 +13,12 @@
 /F22_EECS583_HW2Template.tar.gz
 /HW1_template
 /myproject
+
+Final_Project/build/CMakeFiles/
+Final_Project/build/finalprojectpass/CMakeFiles/
+Final_Project/build/finalprojectpass/cmake_install.cmake
+Final_Project/build/finalprojectpass/Makefile
+Final_Project/build/CMakeFiles/CMakeOutput.log
+Final_Project/build/CMakeFiles/Makefile.cmake
+Final_Project/build/finalprojectpass/CMakeFiles/LLVMHW1.dir/compiler_depend.internal
+Final_Project/build/finalprojectpass/CMakeFiles/LLVMHW1.dir/compiler_depend.make

@@ -68,6 +68,13 @@
 float
 P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, struct p7trace_s **ret_tr)
 {
+  // printf("IM IN VITERBI");    
+  // printf("-------------- ITS ME -------------\n");
+  //   for (int i = 0; i < L; ++i) {
+  //       printf("%c, ", dsq[i]);
+  //   }
+  //   printf("%d\n", L);
+    // printf("%s\n", hmm.);
   struct p7trace_s  *tr;
   int **xmx;
   int **mmx;

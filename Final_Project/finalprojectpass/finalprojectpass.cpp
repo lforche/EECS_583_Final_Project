@@ -19,7 +19,8 @@
 
 using namespace std;
 using namespace llvm;
-namespace{
+
+namespace Performance{
 	struct FinalProject: public FunctionPass {
         static char ID;
 
@@ -36,8 +37,7 @@ namespace{
         }
 
 		virtual bool runOnFunction(Function &F) override{
-            vector<Instruction*> storeInst, loadInst;
-            vector<Loop*> cloneLoop;
+            vector<Instruction*> loadInst;
             AAResults& AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
             LoopInfo& LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
             ScalarEvolution& SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
@@ -45,28 +45,58 @@ namespace{
             DominatorTree& DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
             
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                // for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    Loop* CurLoop = LI.getLoopFor(&(*bb));
-                    if (CurLoop != NULL) {
-                        // if (!CurLoop->isLoopSimplifyForm() || !CurLoop->isRotatedForm() || !CurLoop->getExitingBlock())
-                        //     continue;
-                        const LoopAccessInfo& LAI = LAA->getInfo(CurLoop);
-                        errs() << CurLoop->getSubLoops().empty() << "\t" << *(bb->begin()) << "\n";
-                        // if (!LAI.hasConvergentOp() && (LAI.getNumRuntimePointerChecks() || !LAI.getPSE().getUnionPredicate().isAlwaysTrue())) {
-                            // errs() << LAI->getRuntimePointerChecking()->getNumberOfChecks() << "\n";
-                            // LoopVersioning LVer(LAI, LAI.getRuntimePointerChecking()->getChecks(), CurLoop, &LI, &DT, &SE);
-                            // LVer.versionLoop();
-                            // LVer.annotateLoopWithNoAlias();
-                        // }
+                for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
+                    // get loop
+                    Loop* L = LI.getLoopFor(&(*bb));
+                    
+                    if (L && L->getInductionVariable(SE)) {
+                        Optional<Loop::LoopBounds> loopBounds = Loop::LoopBounds::getBounds(*L, *(L->getInductionVariable(SE)), SE);
+                        if (loopBounds) {
+                            // gets start index
+                            ConstantInt* startVar = dyn_cast<ConstantInt>(&loopBounds->getInitialIVValue()); 
+                            
+                            // gets end index and can maybe use?
+                            // ConstantInt* endVar = dyn_cast<ConstantInt>(&loopBounds->getFinalIVValue());  
+                            
+                            // get tripCount and can maybe use?                        
+                            // unsigned int tripCount = SE.getSmallConstantTripCount(L);
+                            
+                            // gets M variable instruction -- use since end index and tripCount don't work
+                            ICmpInst* endVarInst = L->getLatchCmpInst(); 
+
+                            // gets M variable operand -- wide exit count
+                            Value* endVarOp = endVarInst->getOperand(1); 
+
+                            if (startVar && endVarOp) {
+                                errs() << startVar->getValue() << "\t" << *endVarOp << "\n";
+                            }
+                        }
                     }
-                // }
+                }
             }
 			return true; 
 		}
 	};
 }
 
-char FinalProject::ID = 0;
-static RegisterPass<FinalProject> X("finalproject", "Final Project pass",
+char Performance::FinalProject::ID = 0;
+static RegisterPass<Performance::FinalProject> X("finalproject-performance", "Final Project Performance pass",
+    false /* Only looks at CFG */,
+    false /* Analysis Pass */);
+
+namespace Control {
+	struct FinalProject: public FunctionPass {
+        static char ID;
+
+		FinalProject() : FunctionPass(ID) {}
+
+		virtual bool runOnFunction(Function &F) override{
+            return true; 
+		}
+	};
+}
+
+char Control::FinalProject::ID = 0;
+static RegisterPass<Control::FinalProject> Y("finalproject-control", "Final Project Control pass",
     false /* Only looks at CFG */,
     false /* Analysis Pass */);
