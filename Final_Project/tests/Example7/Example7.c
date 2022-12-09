@@ -41,11 +41,7 @@ int main()
 
 int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount)
 {
-    int *a, *b, *c, *d;
-    int *e, *f, *g, *h;
-    int *u, *l, *m, *n;
-    int *o, *p, *r, *s;
-    int *t;
+    int *a, *b, *c, *e, *p, *t;
 
     int sc = 0;
 
@@ -54,49 +50,17 @@ int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount
         a = x[i];
         b = y[i];
         c = z[i];
-        d = q[i];
 
         e = x[i-1];
-        f = y[i-1];
-        g = z[i-1];
-        h = q[i-1];
-        
-        u = x[i-2];
-        l = y[i-2];
-        m = z[i-2];
-        n = q[i-2];
 
-        o = x[i-3];
         p = y[i-3];
-        r = z[i-3];
-        s = q[i-3];
 
         t = q[i-3];
 
-
         for (int k = 1; k <= loopCount; k++) {
-            a[k] = b[k-1]   + c[k-1];
-
-            if ((sc = d[k-1]  + e[k-1]) > a[k])  
-                a[k] = sc;
-            if ((sc = f[k-1] + g[k-1]) > a[k])  
-                a[k] = sc;
-            if ((sc = h[k]  + u[k])         > a[k])  
-                a[k] = sc; 
-
-            a[k] += l[k];
-
-            if (a[k] < -INFTY) a[k] = -INFTY;  
-
-            m[k] = m[k-1] + n[k-1];
-            if ((sc = a[k-1] + o[k-1]) > m[k]) m[k] = sc;
-            if (m[k] < -INFTY) m[k] = -INFTY;
-            if (k < 10) {
-                p[k] = b[k] + r[k];
-                if ((sc = d[k] + s[k]) > p[k]) p[k] = sc; 
-                p[k] += t[k];
-                if (p[k] < -INFTY) p[k] = -INFTY; 
-            }
+            a[k] = b[k-1] + c[k-1];
+            e[k] = b[k-1] + c[k-1];
+            p[k] += t[k];
         }
     }
 
