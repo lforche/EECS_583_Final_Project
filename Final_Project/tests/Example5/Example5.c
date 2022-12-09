@@ -173,16 +173,16 @@ int testFunc(int L, int M, int *esc, int **msc, int **isc, int **xsc, int **mmx,
     for (int k = 1; k <= M; k++) {
         mc[k] = mpp[k-1]   + tpmm[k-1];
 
-        __asm__ volatile ("nop");
+        __asm__ volatile ("xchg %r13, %r13");  
         if ((sc = ip[k-1]  + tpim[k-1]) > mc[k])  
             mc[k] = sc;
-        __asm__ volatile ("nop");
+        __asm__ volatile ("xchg %r13, %r13");  
         if ((sc = dpp[k-1] + tpdm[k-1]) > mc[k])  
             mc[k] = sc;
-        __asm__ volatile ("nop");
+        __asm__ volatile ("xchg %r13, %r13");  
         if ((sc = xmb  + bp[k])         > mc[k])  
             mc[k] = sc; 
-        __asm__ volatile ("nop");
+        __asm__ volatile ("xchg %r13, %r13");  
      
         mc[k] += ms[k];
 
