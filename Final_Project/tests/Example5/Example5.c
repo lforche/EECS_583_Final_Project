@@ -312,7 +312,9 @@ int P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, stru
             mc[k] = sc;
         if ((sc = xmb  + bp[k])         > mc[k])  
             mc[k] = sc; 
-        
+            
+        __asm__ volatile ("nop");
+     
         mc[k] += ms[k];
 
         if (mc[k] < -INFTY) mc[k] = -INFTY;  
