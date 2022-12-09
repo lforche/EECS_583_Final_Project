@@ -36,8 +36,7 @@ namespace{
         }
 
 		virtual bool runOnFunction(Function &F) override{
-            vector<Instruction*> storeInst, loadInst;
-            vector<Loop*> cloneLoop;
+            vector<Instruction*> loadInst;
             AAResults& AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
             LoopInfo& LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
             ScalarEvolution& SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
@@ -45,21 +44,21 @@ namespace{
             DominatorTree& DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
             
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                // for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    Loop* CurLoop = LI.getLoopFor(&(*bb));
-                    if (CurLoop != NULL) {
-                        // if (!CurLoop->isLoopSimplifyForm() || !CurLoop->isRotatedForm() || !CurLoop->getExitingBlock())
-                        //     continue;
-                        const LoopAccessInfo& LAI = LAA->getInfo(CurLoop);
-                        errs() << CurLoop->getSubLoops().empty() << "\t" << *(bb->begin()) << "\n";
-                        // if (!LAI.hasConvergentOp() && (LAI.getNumRuntimePointerChecks() || !LAI.getPSE().getUnionPredicate().isAlwaysTrue())) {
-                            // errs() << LAI->getRuntimePointerChecking()->getNumberOfChecks() << "\n";
-                            // LoopVersioning LVer(LAI, LAI.getRuntimePointerChecking()->getChecks(), CurLoop, &LI, &DT, &SE);
-                            // LVer.versionLoop();
-                            // LVer.annotateLoopWithNoAlias();
-                        // }
-                    }
-                // }
+                for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
+                    // get loop
+                    Loop* L = LI.getLoopFor(&(*bb));
+                    
+                    // auto loopBounds = L->getBounds(SE);
+                    
+                    // if (L != NULL && loopBounds)
+                    //     errs() << "a\n";
+                    // errs() 
+                    // if (L != NULL && loopBounds->getStepValue() != nullptr)
+                    //     errs() << *(L->getBounds(SE)->getStepValue()) << "\n";
+                    // auto loopInit = loopBounds.getPointer()->getInitialIVValue();
+                    // errs() << L->getNumBlocks() << "\n";
+                }
+                errs() << "\n\n";
             }
 			return true; 
 		}

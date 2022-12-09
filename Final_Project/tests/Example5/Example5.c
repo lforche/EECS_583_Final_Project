@@ -302,19 +302,17 @@ int P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, stru
     mc[0] = -INFTY;
     dc[0] = -INFTY;
     ic[0] = -INFTY;
-
+    // __asm__ volatile ("nop");
     for (k = 1; k <= M; k++) {
         mc[k] = mpp[k-1]   + tpmm[k-1];
 
-        __asm__ volatile ("nop");
         if ((sc = ip[k-1]  + tpim[k-1]) > mc[k])  
             mc[k] = sc;
-        __asm__ volatile ("nop");
         if ((sc = dpp[k-1] + tpdm[k-1]) > mc[k])  
             mc[k] = sc;
-        __asm__ volatile ("nop");
         if ((sc = xmb  + bp[k])         > mc[k])  
             mc[k] = sc; 
+            
         __asm__ volatile ("nop");
      
         mc[k] += ms[k];
@@ -324,7 +322,7 @@ int P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, stru
         dc[k] = dc[k-1] + tpdd[k-1];
         if ((sc = mc[k-1] + tpmd[k-1]) > dc[k]) dc[k] = sc;
         if (dc[k] < -INFTY) dc[k] = -INFTY;
-        __asm__ volatile ("xchg %r13, %r13");  
+
         if (k < M) {
             ic[k] = mpp[k] + tpmi[k];
             if ((sc = ip[k] + tpii[k]) > ic[k]) ic[k] = sc; 
@@ -332,6 +330,7 @@ int P7Viterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, stru
             if (ic[k] < -INFTY) ic[k] = -INFTY; 
         }
     }
+    // __asm__ volatile ("nop");
 
     /* Now the special states. Order is important here.
      * remember, C and J emissions are zero score by definition,
