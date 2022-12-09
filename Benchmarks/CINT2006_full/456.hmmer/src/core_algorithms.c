@@ -25,6 +25,7 @@
 
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 static float get_wee_midpt(struct plan7_s *hmm, char *dsq, int L, 
 			   int k1, char t1, int s1,
@@ -932,6 +933,8 @@ P7SmallViterbi(char *dsq, int L, struct plan7_s *hmm, struct dpmatrix_s *mx, str
   for (i = 0; i < ndom; i++)
     {
       sqlen = ctr->pos[i*2+2] - ctr->pos[i*2+1];   /* length of subseq */
+    
+
 
       if (P7ViterbiSize(sqlen, hmm->M) > RAMLIMIT)
 	P7WeeViterbi(dsq + ctr->pos[i*2+1], sqlen, hmm, &(tarr[i]));
