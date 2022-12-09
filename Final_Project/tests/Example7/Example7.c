@@ -58,8 +58,13 @@ int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount
         t = q[i-3];
 
         for (int k = 1; k <= loopCount; k++) {
+            //Line 1
             a[k] = b[k-1] + c[k-1];
+
+            //Line 2
             e[k] = b[k-1] + c[k-1];
+
+            //Line 3
             p[k] += t[k];
         }
     }
