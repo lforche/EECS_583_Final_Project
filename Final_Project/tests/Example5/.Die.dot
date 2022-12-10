@@ -1,5 +1,5 @@
 digraph "CFG for 'Die' function" {
 	label="CFG for 'Die' function";
 
-	Node0x55cd8ec3a1c0 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{entry:\l  tail call void @exit(i32 noundef 1) #8\l  unreachable\l}"];
+	Node0x55e3c65574d0 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{entry:\l  tail call void @exit(i32 noundef 1) #10\l  unreachable\l}"];
 }

@@ -5,8 +5,8 @@
 ### usage: for optimized code run -- bash ./run.sh -opt 
 ### usage: for unoptimized code run -- bash ./run.sh 
 
-PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so 
-# PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
+# PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so 
+PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
 
 PASS=-finalproject-performance                   # Choose either -finalproject-performance or -finalproject-control
 # PASS=-finalproject-control
@@ -41,7 +41,7 @@ setup
 # Apply your pass to bitcode (IR)
 # opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=${1}.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
 # ./${1}_prof > correct_output
-llvm-profdata merge -o ${1}.profdata default.profraw
+# llvm-profdata merge -o ${1}.profdata default.profraw
 opt -enable-new-pm=0 --indvars -load ${PATH_MYPASS} ${PASS} < Example5.bc > /dev/null
 
 opt -enable-new-pm=0 -dot-cfg Example5.bc > /dev/null

@@ -100,7 +100,7 @@ namespace Performance{
                             endInst = tempEndInst;
                             arrayIdxInst = dyn_cast<Instruction>(i);
                         }
-                    }
+                    } 
                 }
             }
 
@@ -114,6 +114,8 @@ namespace Performance{
                     cmpIdxArrays.push_back(i->getOperand(0));
                 }
             }
+
+            // Step 4: Find the starting value and the final variable of the desired loop
 			return true; 
 		}
 	};

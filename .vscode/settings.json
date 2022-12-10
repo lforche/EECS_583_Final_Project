@@ -16,6 +16,7 @@
         "span": "cpp",
         "regex": "cpp",
         "valarray": "cpp",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "hash_set": "cpp"
     }
 }

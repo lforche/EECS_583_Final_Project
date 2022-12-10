@@ -5,11 +5,11 @@
 ### usage: for optimized code run -- bash Final_Project/tests/run.sh -opt ${Example}
 ### usage: for unoptimized code run -- bash Final_Project/tests/run.sh ${Example}
 
-PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so 
-# PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
+# PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so 
+PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
 
-# PASS=-finalproject-performance                   # Choose either -finalproject-performance or -finalproject-control
-PASS=-finalproject-control
+PASS=-finalproject-performance                   # Choose either -finalproject-performance or -finalproject-control
+# PASS=-finalproject-control
 
 INPUT=${1:-opt}
 
