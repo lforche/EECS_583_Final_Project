@@ -31,3 +31,4 @@ Final_Project/tests/Example7/-opt
 *.prof
 *.profraw
 *.profdata
+*.out
