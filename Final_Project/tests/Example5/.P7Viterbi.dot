@@ -1,5 +1,0 @@
-digraph "CFG for 'P7Viterbi' function" {
-	label="CFG for 'P7Viterbi' function";
-
-	Node0x55e3c65438f0 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{entry:\l  %M1 = getelementptr inbounds %struct.plan7_s, %struct.plan7_s* %hmm, i64 0,\l... i32 20\l  %maxN.i = getelementptr inbounds %struct.dpmatrix_s, %struct.dpmatrix_s*\l... %mx, i64 0, i32 8\l  %0 = load i32, i32* %maxN.i, align 8, !tbaa !3\l  %cmp.not.i = icmp sge i32 %0, %L\l  call void @llvm.assume(i1 %cmp.not.i)\l  %1 = load i32, i32* %M1, align 8, !tbaa !9\l  %maxM.i = getelementptr inbounds %struct.dpmatrix_s, %struct.dpmatrix_s*\l... %mx, i64 0, i32 9\l  %2 = load i32, i32* %maxM.i, align 4, !tbaa !12\l  %cmp1.not.i = icmp sge i32 %2, %1\l  call void @llvm.assume(i1 %cmp1.not.i)\l  tail call void @exit(i32 noundef 1) #10\l  unreachable\l}"];
-}

@@ -55,6 +55,9 @@ namespace Performance{
             // tempEndInst  : temp variable instruction that ends the usage range for arrayIdxInst
             // tempUses     : temp variable number of uses for the arrayIdxInst
             // cmpIdxArrays : get the store and load instruction that are in the usage range for arrayIdxInst
+            // loopCountInst: instruction to store icmp instructions that hold variables compared to in loop preheaders
+            // loopCountVar : store the variable compared to in loop
+            // loopStartVal : store starting value for a loop 
             Instruction* arrayIdxInst; 
             Instruction* startInst;
             Instruction* endInst;
@@ -63,9 +66,16 @@ namespace Performance{
             Instruction* tempEndInst;
             int tempUses = 0;
             vector<Value*> cmpIdxArrays;
+            Instruction* loopCountInst = nullptr;
+            Value* loopCountVar = nullptr;
+            ConstantInt* loopStartVal = nullptr;
 
             // Step 2: Find instruction best to use for implementation of pass
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
+                // Check if there is an ICmp statement to get the loopCountInst
+                if (isa<ICmpInst>(bb->begin()))
+                    loopCountInst = &*(bb->begin());
+
                 for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
                     // Get the loop of this basic block
                     Loop* L = LI.getLoopFor(&(*bb));
@@ -100,6 +110,14 @@ namespace Performance{
                             endInst = tempEndInst;
                             arrayIdxInst = dyn_cast<Instruction>(i);
                         }
+
+                        // Check if the loopCountInst is in the loop's preheader and is in fact the loopCountVar
+                        //      so the starting value of the loop and loopCountVar can be stored for future use
+                        if (loopCountInst != nullptr && loopCountInst->getParent() == L->getLoopPreheader()) {
+                            Optional<Loop::LoopBounds> loopBounds = Loop::LoopBounds::getBounds(*L, *(L->getInductionVariable(SE)), SE);
+                            loopStartVal = dyn_cast<ConstantInt>(&loopBounds->getInitialIVValue());
+                            loopCountVar = loopCountInst->getOperand(0);
+                        }
                     } 
                 }
             }
@@ -115,7 +133,10 @@ namespace Performance{
                 }
             }
 
-            // Step 4: Find the starting value and the final variable of the desired loop
+            // Step 4: Use the starting value and the final variable of the desired loop to generate the 
+            //      if statements that go in the preheader --- NEEDS WORK
+            if (loopStartVal != nullptr && loopCountVar != nullptr)
+                errs() << *(loopStartVal) << "\t" << loopCountVar->getName() << "\n";
 			return true; 
 		}
 	};
