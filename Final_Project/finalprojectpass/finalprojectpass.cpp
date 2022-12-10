@@ -16,6 +16,7 @@
 #include <iostream>
 #include "llvm/Analysis/LoopAccessAnalysis.h"
 #include "llvm/Analysis/ScalarEvolution.h"
+#include "llvm/Analysis/LoopNestAnalysis.h"
 
 using namespace std;
 using namespace llvm;
@@ -44,36 +45,44 @@ namespace Performance{
             LoopAccessLegacyAnalysis* LAA = &getAnalysis<LoopAccessLegacyAnalysis>();
             DominatorTree& DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
             
+            Loop* L;
+            Instruction* arrayIdxInst;
+            Instruction* startInst;
+            Instruction* endInst;
+            Instruction* tempStartInst;
+            Instruction* tempEndInst;
+            int numUses = 0;
+            int temp = 0;
+
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
+                // errs() << "--------------------------\n" << *(F.getFunction().getEntryBlock().begin()) << "--------------------------\n";
                 for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    // get loop
-                    Loop* L = LI.getLoopFor(&(*bb));
-                    
-                    if (L && L->getInductionVariable(SE)) {
-                        Optional<Loop::LoopBounds> loopBounds = Loop::LoopBounds::getBounds(*L, *(L->getInductionVariable(SE)), SE);
-                        if (loopBounds) {
-                            // gets start index
-                            ConstantInt* startVar = dyn_cast<ConstantInt>(&loopBounds->getInitialIVValue()); 
-                            
-                            // gets end index and can maybe use?
-                            // ConstantInt* endVar = dyn_cast<ConstantInt>(&loopBounds->getFinalIVValue());  
-                            
-                            // get tripCount and can maybe use?                        
-                            // unsigned int tripCount = SE.getSmallConstantTripCount(L);
-                            
-                            // gets M variable instruction -- use since end index and tripCount don't work
-                            ICmpInst* endVarInst = L->getLatchCmpInst(); 
-
-                            // gets M variable operand -- wide exit count
-                            Value* endVarOp = endVarInst->getOperand(1); 
-
-                            if (startVar && endVarOp) {
-                                errs() << startVar->getValue() << "\t" << *endVarOp << "\n";
+                    // Create Variables
+                    L = LI.getLoopFor(&(*bb));
+                    // Step 1: find arrayidx instructions with the most store/load uses
+                    if (L && isa<GetElementPtrInst>(*i) && i->hasName()) {
+                        // check if the users are store and/or load instructions and exist in the same loop as the current instruction
+                        if (!i->users().empty()) {
+                            // GetElementPtr appears to only be used in store and load instructions since it does the calculation of addresses
+                            tempEndInst = dyn_cast<Instruction>(*(i->user_begin())); 
+                            temp = 0;
+                            for (auto it : i->users()) {
+                                if (L->contains(dyn_cast<Instruction>(it)->getParent())) {
+                                    temp += 1;
+                                    tempStartInst = dyn_cast<Instruction>(it);
+                                }
+                            }
+                            if (temp > numUses) {
+                                numUses = temp;
+                                startInst = tempStartInst;
+                                endInst = tempEndInst;
+                                arrayIdxInst = dyn_cast<Instruction>(i);
                             }
                         }
                     }
                 }
             }
+            errs() << *startInst << "\n" << *endInst << "\n" << *arrayIdxInst << "\n\n";
 			return true; 
 		}
 	};
