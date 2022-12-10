@@ -1,43 +1,104 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-void change(int ** x, int * z);
-void cant_change(int * x, int * z);
+// __asm__ volatile ("xchg %r13, %r13");  
+const int LOOPCOUNT = 100000000;
+const int INFTY = 10;
+
+int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount);
 
 int main()
 {
     int c = 1;
     int d = 2;
     int e = 3;
-    int * cc = &c;
-    int * dd = &d;
-    int * ee = &e;
-    int ** ccc = &cc;  // pointer to pointer 'a'
 
-    printf("\n cc's value: %x \n", cc);
-    printf("\n dd's value: %x \n", dd);
-    printf("\n ee's value: %x \n", ee);
-    printf("\n can we change cc?, lets see \n");
-    printf("\n cc = dd \n");
-    cc = dd;
-    printf("\n cc's value is now: %x, same as 'dd'... it seems we can, but can we do it in a function? lets see... \n", cc);
-    printf("\n cant_change(cc, ee); \n");
-    cant_change(cc, ee);
-    printf("\n cc's value is now: %x, Doh! same as 'dd'...  that function tricked us. \n", cc);
+    int *cc = (int *)malloc(LOOPCOUNT * sizeof(int));
+    int *dd = (int *)malloc(LOOPCOUNT * sizeof(int));
+    int *ee = (int *)malloc(LOOPCOUNT * sizeof(int));
 
-    printf("\n NOW! lets see if a pointer to a pointer solution can help us... remember that 'ccc' point to 'cc' \n");
-     printf("\n change(ccc, ee); \n");
-    change(ccc, ee);
-    printf("\n cc's value is now: %x, YEAH! same as 'ee'...  that function ROCKS!!!. \n", cc);
+    int **ccc = (int **)malloc(LOOPCOUNT * sizeof(int *));
+    int **ddd = (int **)malloc(LOOPCOUNT * sizeof(int *));
+    int **eee = (int **)malloc(LOOPCOUNT * sizeof(int *));
+    int **fff = (int **)malloc(LOOPCOUNT * sizeof(int *));
+
+    for (int i = 0; i < LOOPCOUNT; i++)
+    {
+        cc[i] = c;
+        dd[i] = d;
+        ee[i] = e;
+        
+        ccc[i] = cc;
+        ddd[i] = dd;
+        eee[i] = ee;
+        fff[i] = dd;
+    }
+
+    printf("%d\n", P6Viterbi(ccc, ddd, eee, fff, 10, LOOPCOUNT));
     
     return 0;
 }
 
-void cant_change(int * x, int * z){
-    x = z;
-    printf("\n ----> value of 'cc' is: %x inside function, same as 'ee', BUT will it be the same outside of this function? lets see\n", x);
-}
+int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount)
+{
+    int *a, *b, *c, *d;
+    int *e, *f, *g, *h;
+    int *u, *l, *m, *n;
+    int *o, *p, *r, *s;
+    int *t;
 
-void change(int ** x, int * z){
-    *x = z;
-    printf("\n ----> value of 'cc' is: %x inside function, same as 'ee', BUT will it be the same outside of this function? lets see\n", *x);
+    int sc = 0;
+
+    for (int i = 3; i < loopAmount; i++)
+    {   
+        a = x[i];
+        b = y[i];
+        c = z[i];
+        d = q[i];
+
+        e = x[i-1];
+        f = y[i-1];
+        g = z[i-1];
+        h = q[i-1];
+        
+        u = x[i-2];
+        l = y[i-2];
+        m = z[i-2];
+        n = q[i-2];
+
+        o = x[i-3];
+        p = y[i-3];
+        r = z[i-3];
+        s = q[i-3];
+
+        t = q[i-3];
+
+
+        for (int k = 1; k <= loopCount; k++) {
+            a[k] = b[k-1]   + c[k-1];
+
+            if ((sc = d[k-1]  + e[k-1]) > a[k])  
+                a[k] = sc;
+            if ((sc = f[k-1] + g[k-1]) > a[k])  
+                a[k] = sc;
+            if ((sc = h[k]  + u[k])         > a[k])  
+                a[k] = sc; 
+
+            a[k] += l[k];
+
+            if (a[k] < -INFTY) a[k] = -INFTY;  
+
+            m[k] = m[k-1] + n[k-1];
+            if ((sc = a[k-1] + o[k-1]) > m[k]) m[k] = sc;
+            if (m[k] < -INFTY) m[k] = -INFTY;
+            if (k < 10) {
+                p[k] = b[k] + r[k];
+                if ((sc = d[k] + s[k]) > p[k]) p[k] = sc; 
+                p[k] += t[k];
+                if (p[k] < -INFTY) p[k] = -INFTY; 
+            }
+        }
+    }
+
+    return sc;
 }

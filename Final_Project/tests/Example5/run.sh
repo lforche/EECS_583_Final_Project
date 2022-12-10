@@ -40,6 +40,8 @@ clang -O2 -fprofile-instr-generate Example5.ls.prof.bc -o Example5.prof
 setup
 # Apply your pass to bitcode (IR)
 # opt -enable-new-pm=0 -pgo-instr-use -pgo-test-profile-file=${1}.profdata -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+# ./${1}_prof > correct_output
+llvm-profdata merge -o ${1}.profdata default.profraw
 opt -enable-new-pm=0 --indvars -load ${PATH_MYPASS} ${PASS} < Example5.bc > /dev/null
 
 opt -enable-new-pm=0 -dot-cfg Example5.bc > /dev/null
