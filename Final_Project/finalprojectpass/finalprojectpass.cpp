@@ -45,44 +45,75 @@ namespace Performance{
             LoopAccessLegacyAnalysis* LAA = &getAnalysis<LoopAccessLegacyAnalysis>();
             DominatorTree& DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
             
-            Loop* L;
-            Instruction* arrayIdxInst;
+            // Step 1: Create any variables used across pass
+
+            // arrayIdxInst : instruction to store in variable to save on loads
+            // startInst    : instruction that starts the usage range for arrayIdxInst
+            // endInst      : instruction that ends the usage range for arrayIdxInst
+            // numUses      : number of uses for the arrayIdxInst 
+            // tempStartInst: temp variable instruction that starts the usage range for arrayIdxInst
+            // tempEndInst  : temp variable instruction that ends the usage range for arrayIdxInst
+            // tempUses     : temp variable number of uses for the arrayIdxInst
+            // cmpIdxArrays : get the store and load instruction that are in the usage range for arrayIdxInst
+            Instruction* arrayIdxInst; 
             Instruction* startInst;
             Instruction* endInst;
+            int numUses = 0;           
             Instruction* tempStartInst;
             Instruction* tempEndInst;
-            int numUses = 0;
-            int temp = 0;
+            int tempUses = 0;
+            vector<Value*> cmpIdxArrays;
 
+            // Step 2: Find instruction best to use for implementation of pass
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                // errs() << "--------------------------\n" << *(F.getFunction().getEntryBlock().begin()) << "--------------------------\n";
                 for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    // Create Variables
-                    L = LI.getLoopFor(&(*bb));
-                    // Step 1: find arrayidx instructions with the most store/load uses
-                    if (L && isa<GetElementPtrInst>(*i) && i->hasName()) {
-                        // check if the users are store and/or load instructions and exist in the same loop as the current instruction
-                        if (!i->users().empty()) {
-                            // GetElementPtr appears to only be used in store and load instructions since it does the calculation of addresses
-                            tempEndInst = dyn_cast<Instruction>(*(i->user_begin())); 
-                            temp = 0;
-                            for (auto it : i->users()) {
-                                if (L->contains(dyn_cast<Instruction>(it)->getParent())) {
-                                    temp += 1;
-                                    tempStartInst = dyn_cast<Instruction>(it);
-                                }
+                    // Get the loop of this basic block
+                    Loop* L = LI.getLoopFor(&(*bb));
+
+                    // Find arrayidx instructions with the uses
+                    // No need to check the type of instruction because GetElementPtr appears to 
+                    //      only be used in store and load instructions since it does the calculation of addresses
+                    // First check if the loop is valid, the instruction is a GetElementPtr, and it has users
+                    if (L && isa<GetElementPtrInst>(*i) && !i->users().empty()) {
+                        // Create the temporary variables to find the arrayIdx with the most uses
+                        // since for (auto it : i->users()) appears to iterate backwards, the first user is actually
+                        //      the last user in the loop for the current instruction hence why tempEndInst is initialized
+                        //      to the first user
+                        tempEndInst = dyn_cast<Instruction>(*(i->user_begin())); 
+
+                        // Set tempUses to zero and iterate over users of the current instruction to determine
+                        //      if the current instruction has more users and set tempStartInst to that user
+                        //      if the current loop contains the basic block that has that instruction
+                        tempUses = 0;
+                        for (auto it : i->users()) {
+                            if (L->contains(dyn_cast<Instruction>(it)->getParent())) {
+                                tempUses += 1;
+                                tempStartInst = dyn_cast<Instruction>(it);
                             }
-                            if (temp > numUses) {
-                                numUses = temp;
-                                startInst = tempStartInst;
-                                endInst = tempEndInst;
-                                arrayIdxInst = dyn_cast<Instruction>(i);
-                            }
+                        }
+                        
+                        // If the number of users for the current is greater than the previously found amount
+                        //      replace all of the none temporary variables to save it for future use
+                        if (tempUses > numUses) {
+                            numUses = tempUses;
+                            startInst = tempStartInst;
+                            endInst = tempEndInst;
+                            arrayIdxInst = dyn_cast<Instruction>(i);
                         }
                     }
                 }
             }
-            errs() << *startInst << "\n" << *endInst << "\n" << *arrayIdxInst << "\n\n";
+
+            // Step 3: Iterate over the start and end range finding any store and load instructions
+            for (BasicBlock::iterator i = startInst->getIterator(), e = endInst->getIterator(); i != e; ++i++) {
+                // Verify that the instruction is either a load or a store and isn't the startInst and doesn't 
+                //      use the arrayIdxInst in it
+                if (isa<StoreInst>(*i) && (&(*i) != startInst) && (i->getOperand(1) != arrayIdxInst)) {
+                    cmpIdxArrays.push_back(i->getOperand(1));
+                } else if (isa<LoadInst>(*i) && (&(*i) != startInst) && (i->getOperand(0) != arrayIdxInst)) {
+                    cmpIdxArrays.push_back(i->getOperand(0));
+                }
+            }
 			return true; 
 		}
 	};
