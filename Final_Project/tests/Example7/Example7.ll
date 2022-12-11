@@ -1,4 +1,4 @@
-; ModuleID = 'Example7.c'
+; ModuleID = 'Example7.bc'
 source_filename = "Example7.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
@@ -95,7 +95,7 @@ vector.body:                                      ; preds = %vector.body, %entry
   %38 = getelementptr inbounds i32*, i32** %36, i64 2
   %39 = bitcast i32** %38 to <2 x i8*>*
   store <2 x i8*> %broadcast.splat80, <2 x i8*>* %39, align 8, !tbaa !7
-  %index.next = add nuw i64 %index, 4
+  %index.next = add nuw nsw i64 %index, 4
   %40 = icmp eq i64 %index.next, 100000000
   br i1 %40, label %for.cond.cleanup, label %vector.body, !llvm.loop !9
 
@@ -176,6 +176,9 @@ declare dso_local i64 @clock() local_unnamed_addr #2
 ; Function Attrs: nounwind uwtable
 define dso_local i32 @P6Viterbi(i32** nocapture noundef readonly %x, i32** nocapture noundef readonly %y, i32** nocapture noundef readonly %z, i32** nocapture noundef readonly %q, i32 noundef %loopAmount, i32 noundef %loopCount) local_unnamed_addr #0 {
 entry:
+  %isUnaliased = alloca i8, align 1
+  %tint = alloca i32, align 4
+  store i8 0, i8* %isUnaliased, align 1
   %cmp80 = icmp sgt i32 %loopAmount, 3
   br i1 %cmp80, label %for.body.lr.ph, label %for.cond.cleanup
 
@@ -186,7 +189,10 @@ for.body.lr.ph:                                   ; preds = %entry
   %wide.trip.count = zext i32 %0 to i64
   br label %for.body
 
-for.cond.cleanup:                                 ; preds = %for.cond.cleanup15, %entry
+for.cond.cleanup.loopexit:                        ; preds = %for.cond.cleanup15
+  br label %for.cond.cleanup
+
+for.cond.cleanup:                                 ; preds = %for.cond.cleanup.loopexit, %entry
   ret i32 0
 
 for.body:                                         ; preds = %for.body.lr.ph, %for.cond.cleanup15
@@ -205,15 +211,21 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %7 = load i32*, i32** %arrayidx9, align 8, !tbaa !7
   %arrayidx12 = getelementptr inbounds i32*, i32** %q, i64 %6
   %8 = load i32*, i32** %arrayidx12, align 8, !tbaa !7
-  br i1 %cmp14.not78, label %for.cond.cleanup15, label %for.body16
+  br i1 %cmp14.not78, label %for.cond.cleanup15, label %for.body16.preheader
 
-for.cond.cleanup15:                               ; preds = %for.body16, %for.body
+for.body16.preheader:                             ; preds = %for.body
+  br label %for.body16
+
+for.cond.cleanup15.loopexit:                      ; preds = %for.body16
+  br label %for.cond.cleanup15
+
+for.cond.cleanup15:                               ; preds = %for.cond.cleanup15.loopexit, %for.body
   %indvars.iv.next85 = add nuw nsw i64 %indvars.iv84, 1
   %exitcond90.not = icmp eq i64 %indvars.iv.next85, %wide.trip.count89
-  br i1 %exitcond90.not, label %for.cond.cleanup, label %for.body, !llvm.loop !12
+  br i1 %exitcond90.not, label %for.cond.cleanup.loopexit, label %for.body, !llvm.loop !12
 
-for.body16:                                       ; preds = %for.body, %for.body16
-  %indvars.iv = phi i64 [ %indvars.iv.next, %for.body16 ], [ 1, %for.body ]
+for.body16:                                       ; preds = %for.body16.preheader, %for.body16
+  %indvars.iv = phi i64 [ %indvars.iv.next, %for.body16 ], [ 1, %for.body16.preheader ]
   tail call void asm sideeffect "xchg %r13, %r13", "~{dirflag},~{fpsr},~{flags}"() #4, !srcloc !13
   %9 = add nsw i64 %indvars.iv, -1
   %arrayidx19 = getelementptr inbounds i32, i32* %2, i64 %9
@@ -241,7 +253,7 @@ for.body16:                                       ; preds = %for.body, %for.body
   tail call void asm sideeffect "xchg %r13, %r13", "~{dirflag},~{fpsr},~{flags}"() #4, !srcloc !15
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond.not = icmp eq i64 %indvars.iv.next, %wide.trip.count
-  br i1 %exitcond.not, label %for.cond.cleanup15, label %for.body16, !llvm.loop !16
+  br i1 %exitcond.not, label %for.cond.cleanup15.loopexit, label %for.body16, !llvm.loop !16
 }
 
 ; Function Attrs: nofree nounwind

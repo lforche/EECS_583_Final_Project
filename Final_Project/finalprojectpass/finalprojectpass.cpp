@@ -172,15 +172,16 @@ namespace Performance{
             StoreInst *tunStr = new StoreInst(zero, tunaliasedPtr, firstInst);
 
             BasicBlock *arrayBB = arrayIdxInst->getParent();
-            // errs() << arrayBB->getParent()->getName() << "\n";
 
             errs() << "\nOuter Loop: " << outerLoop->getName() << "\nDepth: " << outerLoop->getSubLoops().size() << "\n";
             errs() << "\nInner Loop: " << innerLoop->getName() << "\nDepth: " << innerLoop->getLoopDepth() << "\n";
 
             /*/////////Zach///////////*/
 
+
+
             ////////////////////////////
-            
+
             /*////////Lindsey/////////*/
             
             ////////////////////////////
@@ -207,7 +208,6 @@ namespace Performance{
             Loop *tempLoop = nullptr;
             for (auto L : LI)
             {
-                errs() << L->getName() << "\n";
 
                 if (L->contains(inst))
                 {
