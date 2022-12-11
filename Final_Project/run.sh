@@ -32,7 +32,7 @@ setup
 
 if [ ${1} == -opt ]
 then
-clang -O2 -S -emit-llvm -c ${1}.c
+clang -O2 -S -emit-llvm -c ${2}.c
 clang -O2 -emit-llvm -c ${2}.c -o ${2}.bc
 opt -O2 -enable-new-pm=0 ${2}.bc -o ${2}.ls.bc
 opt -O2 -enable-new-pm=0 -pgo-instr-gen -instrprof ${2}.ls.bc -o ${2}.ls.prof.bc

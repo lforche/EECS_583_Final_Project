@@ -38,7 +38,6 @@ namespace Performance{
         }
 
 		virtual bool runOnFunction(Function &F) override{
-            // LLVMContextRef 
             vector<Instruction*> loadInst;
             AAResults& AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
             LoopInfo& LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
@@ -76,34 +75,37 @@ namespace Performance{
                         }
                     }
                   
-                if (q==2)
-                    {
-                        // errs() << "\nHERE\n\n";
-                        const Twine tunaliasedName = "tunaliased";
-                        const Twine tintName = "tint";
-                        // Instruction *temp = i->clone();
-                        llvm::Type *i8Ty = llvm::Type::getInt32Ty((*bb).getContext());
-                        llvm::Type *i32Ty = llvm::Type::getInt32Ty((*bb).getContext());
-                        Instruction& firstInst = *(i);
-                        // errs() << firstInst << "\n";
-                        auto tunaliased = new AllocaInst(i8Ty, 0, tunaliasedName, &firstInst);
-                        auto tint = new AllocaInst(i32Ty, 0, tintName, &firstInst);
-                        errs() << "Inserted: " << *tunaliased << "\n";
-                        errs() << "Parent: " << tunaliased->getParent()->getName() << "\n";
-                        errs() << "Function: " << tunaliased->getFunction()->getName() << "\n\n";
+                    if (q==2)
+                        {
+                            // errs() << "\nHERE\n\n";
+                            const Twine tunaliasedName = "tunaliased";
+                            const Twine tintName = "tint";
+                            // Instruction *temp = i->clone();
+                            llvm::Type *i8Ty = llvm::Type::getInt32Ty((*bb).getContext());
+                            llvm::Type *i32Ty = llvm::Type::getInt32Ty((*bb).getContext());
+                            Instruction& firstInst = *(i);
+                            // errs() << firstInst << "\n";
+                            auto tunaliased = new AllocaInst(i8Ty, 0, tunaliasedName, &firstInst);
+                            auto tint = new AllocaInst(i32Ty, 0, tintName, &firstInst);
+                            errs() << "Inserted: " << *tunaliased << "\n";
+                            errs() << "Parent: " << tunaliased->getParent()->getName() << "\n";
+                            errs() << "Function: " << tunaliased->getFunction()->getName() << "\n\n";
 
-                        llvm::Value *v = llvm::BinaryOperator::CreateAdd(tunaliased, tint, "theyAdded", &firstInst);
+                            errs() << tint->getType() << "\n";
+                            Value *one =  llvm::ConstantInt::get(Type::getInt32Ty((*bb).getContext()),1);
+                            StoreInst *str = new StoreInst(one, tint, &firstInst);
+                            
+                            // llvm::Value *v = llvm::BinaryOperator::CreateAdd(tunaliased, tint, "theyAdded", &firstInst);
 
-                        // StoreInst *str = new StoreInst(tunaliased, tint, &firstInst);
 
-                        // auto x = getInstByIndex(&(*bb), 5);
+                            // auto x = getInstByIndex(&(*bb), 5);
 
-                        // x->replaceAllUsesWith(tint);
+                            // x->replaceAllUsesWith(tint);
 
-                        // auto addIns = new AddInst
-                        // auto tint = new AllocaInst(llvm::Type::getInt8Ty(F.getContext()), 0, tintName, &(*bb));
-                        // SplitBlockAndInsertIfThenElse();
-                    }
+                            // auto addIns = new AddInst
+                            // auto tint = new AllocaInst(llvm::Type::getInt8Ty(F.getContext()), 0, tintName, &(*bb));
+                            // SplitBlockAndInsertIfThenElse();
+                        }
                 }
             }
 
