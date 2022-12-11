@@ -84,7 +84,7 @@ namespace Performance{
                     // No need to check the type of instruction because GetElementPtr appears to 
                     //      only be used in store and load instructions since it does the calculation of addresses
                     // First check if the loop is valid, the instruction is a GetElementPtr, and it has users
-                    if (L && isa<GetElementPtrInst>(*i) && !i->users().empty()) {
+                    if (L != nullptr && isa<GetElementPtrInst>(*i) && !i->users().empty()) {
                         // Create the temporary variables to find the arrayIdx with the most uses
                         // since for (auto it : i->users()) appears to iterate backwards, the first user is actually
                         //      the last user in the loop for the current instruction hence why tempEndInst is initialized
@@ -123,13 +123,15 @@ namespace Performance{
             }
 
             // Step 3: Iterate over the start and end range finding any store and load instructions
-            for (BasicBlock::iterator i = startInst->getIterator(), e = endInst->getIterator(); i != e; ++i++) {
-                // Verify that the instruction is either a load or a store and isn't the startInst and doesn't 
-                //      use the arrayIdxInst in it
-                if (isa<StoreInst>(*i) && (&(*i) != startInst) && (i->getOperand(1) != arrayIdxInst)) {
-                    cmpIdxArrays.insert(i->getOperand(1));
-                } else if (isa<LoadInst>(*i) && (&(*i) != startInst) && (i->getOperand(0) != arrayIdxInst)) {
-                    cmpIdxArrays.insert(i->getOperand(0));
+            if (startInst != nullptr && arrayIdxInst != nullptr && !cmpIdxArrays.empty()) {
+                for (BasicBlock::iterator i = startInst->getIterator(), e = endInst->getIterator(); i != e; ++i++) {
+                    // Verify that the instruction is either a load or a store and isn't the startInst and doesn't 
+                    //      use the arrayIdxInst in it
+                    if (isa<StoreInst>(*i) && (&(*i) != startInst) && (i->getOperand(1) != arrayIdxInst)) {
+                        cmpIdxArrays.insert(i->getOperand(1));
+                    } else if (isa<LoadInst>(*i) && (&(*i) != startInst) && (i->getOperand(0) != arrayIdxInst)) {
+                        cmpIdxArrays.insert(i->getOperand(0));
+                    }
                 }
             }
 
@@ -143,7 +145,7 @@ namespace Performance{
                 for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
                     // get loop
                     q++;
-                    Loop* L = LI.getLoopFor(&(*bb));
+                    // Loop* L = LI.getLoopFor(&(*bb));
                             
                     if (q==2)
                     {
