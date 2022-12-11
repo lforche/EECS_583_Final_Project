@@ -56,7 +56,7 @@ clang -fprofile-instr-generate ${1}.ls.prof.bc -o ${1}.prof
 setup
 # Apply your pass to bitcode (IR)
 # opt -enable-new-pm=0 --indvars -f -load ${PATH_MYPASS} ${PASS} ${1}.bc > ${1}.ls.bc 2> /dev/null
-# opt -enable-new-pm=0 --indvars -S -load ${PATH_MYPASS} ${PASS} ${1}.bc > ${1}.ll
+opt -enable-new-pm=0 --indvars -S -load ${PATH_MYPASS} -finalproject-control ${1}.bc > ${1}.ll
 # opt -enable-new-pm=0 --indvars -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
 
 fi
