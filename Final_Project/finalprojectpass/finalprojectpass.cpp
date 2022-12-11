@@ -176,6 +176,14 @@ namespace Performance{
 
             errs() << "\nOuter Loop: " << outerLoop->getName() << "\nDepth: " << outerLoop->getSubLoops().size() << "\n";
             errs() << "\nInner Loop: " << innerLoop->getName() << "\nDepth: " << innerLoop->getLoopDepth() << "\n";
+
+            /*/////////Zach///////////*/
+
+            ////////////////////////////
+            
+            /*////////Lindsey/////////*/
+            
+            ////////////////////////////
 			return true; 
 		}
 
