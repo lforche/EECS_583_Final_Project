@@ -82,11 +82,6 @@ namespace Performance{
                     // Get the loop of this basic block
                     Loop* L = LI.getLoopFor(&(*bb));
 
-                    // if (L == nullptr)
-                    // {
-                    //     errs() << "NO LOOP!!!!!!!!!!!\n";
-                    //     return 0;
-                    // }
                     // Find arrayidx instructions with the uses
                     // No need to check the type of instruction because GetElementPtr appears to 
                     //      only be used in store and load instructions since it does the calculation of addresses
@@ -151,9 +146,14 @@ namespace Performance{
 
             // Step 4: Use the starting value and the final variable of the desired loop to generate the 
             //      if statements that go in the preheader --- NEEDS WORK
-            if (!cmpIdxArrays.empty())
-                errs() << cmpIdxArrays.size() << "\n"; 
+            if (cmpIdxArrays.empty())
+            {
+                errs() << "cmpIdxArrays is empty. Optimization cannot be applied..." << "\n";
+                return 0;
+            } 
             
+            Loop *outerLoop = getOuterLoopByInst(arrayIdxInst, LI);
+            Loop *innerLoop = getInnerLoopByInst(arrayIdxInst, LI);
 
             //Find first instruction of the first basic block of the function
             BasicBlock *bb = &(*(F.begin()));
@@ -173,18 +173,6 @@ namespace Performance{
 
             BasicBlock *arrayBB = arrayIdxInst->getParent();
             // errs() << arrayBB->getParent()->getName() << "\n";
-
-            Loop *innerLoop;
-            Loop *outerLoop = getOuterLoopByInst(arrayIdxInst, LI);
-
-            LI;
-            for (auto L : outerLoop->getSubLoops())
-            {
-                if (L->contains(arrayIdxInst))
-                {
-                    innerLoop = L;
-                }
-            }
 
             errs() << "\nOuter Loop: " << outerLoop->getName() << "\nDepth: " << outerLoop->getSubLoops().size() << "\n";
             errs() << "\nInner Loop: " << innerLoop->getName() << "\nDepth: " << innerLoop->getLoopDepth() << "\n";
@@ -240,6 +228,21 @@ namespace Performance{
             }
 
             return outerLoop;
+        }
+
+        Loop *getInnerLoopByInst(Instruction *inst, LoopInfo &LI)
+        {
+            Loop *innerLoop;
+            Loop *outerLoop = getOuterLoopByInst(inst, LI);
+
+            for (auto L : outerLoop->getSubLoops())
+            {
+                if (L->contains(inst))
+                {
+                    innerLoop = L;
+                }
+            }
+            return innerLoop;
         }
 	};
 }
