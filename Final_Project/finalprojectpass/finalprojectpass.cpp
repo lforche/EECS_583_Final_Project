@@ -96,7 +96,7 @@ namespace Performance{
                         //      if the current loop contains the basic block that has that instruction
                         tempUses = 0;
                         for (auto it : i->users()) {
-                            if (L->contains(dyn_cast<Instruction>(it)->getParent())) {
+                            if (L->contains(dyn_cast<Instruction>(it)->getParent()) && dyn_cast<Instruction>(it) != arrayIdxInst) {
                                 tempUses += 1;
                                 tempStartInst = dyn_cast<Instruction>(it);
                             }
@@ -123,13 +123,13 @@ namespace Performance{
             }
 
             // Step 3: Iterate over the start and end range finding any store and load instructions
-            if (startInst != nullptr && arrayIdxInst != nullptr && !cmpIdxArrays.empty()) {
+            if (startInst != nullptr && arrayIdxInst != nullptr) {
                 for (BasicBlock::iterator i = startInst->getIterator(), e = endInst->getIterator(); i != e; ++i++) {
                     // Verify that the instruction is either a load or a store and isn't the startInst and doesn't 
                     //      use the arrayIdxInst in it
-                    if (isa<StoreInst>(*i) && (&(*i) != startInst) && (i->getOperand(1) != arrayIdxInst)) {
+                    if (isa<StoreInst>(*i)  && (&(*i) != startInst) && (dyn_cast<Instruction>(i->getOperand(1)) != arrayIdxInst)) {
                         cmpIdxArrays.insert(i->getOperand(1));
-                    } else if (isa<LoadInst>(*i) && (&(*i) != startInst) && (i->getOperand(0) != arrayIdxInst)) {
+                    } else if (isa<LoadInst>(*i)  && (&(*i) != startInst) && (dyn_cast<Instruction>(i->getOperand(0)) != arrayIdxInst)) {
                         cmpIdxArrays.insert(i->getOperand(0));
                     }
                 }
@@ -137,8 +137,8 @@ namespace Performance{
 
             // Step 4: Use the starting value and the final variable of the desired loop to generate the 
             //      if statements that go in the preheader --- NEEDS WORK
-            if (loopStartVal != nullptr && loopCountVar != nullptr)
-                errs() << *(loopStartVal) << "\t" << loopCountVar->getName() << "\n";
+            if (!cmpIdxArrays.empty())
+                errs() << cmpIdxArrays.size() << "\n"; 
             
             int q = 0;
             for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
