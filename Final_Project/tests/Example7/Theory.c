@@ -86,7 +86,7 @@ int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount
         (&e[loopCount] < &t[1]) || (&e[1] > &t[loopCount]))
         {
             tunalias = 1; 
-            printf("t is unaliased\n");
+            // printf("t is unaliased\n");
         }
         // else
         // {
@@ -118,7 +118,7 @@ int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount
             if (tunalias == 1)
             {
                 tint = t[k];
-                tint++;
+                sc += tint;
                 e[k] = b[k-1] + c[k-1];
                 t[k] = tint;
                 p[k] += tint;
@@ -126,10 +126,12 @@ int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount
             }
             else
             {
-                t[k]++;
+                sc += t[k];
                 e[k] = b[k-1] + c[k-1];
                 p[k] += t[k];
             }
+
+            sc += p[k];
 // __asm__ volatile ("xchg %r13, %r13");  
             //Line 1
             // if (bunalias == 1)

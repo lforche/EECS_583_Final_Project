@@ -7,8 +7,11 @@
 ### Note: Do NOT inlude inputs/ in ${input}, `./run.sh compress inputs/compress.in` will provide different results
 
 # PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so ### Action Required: Specify the path to your pass ###
-PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so
-NAME_MYPASS=-finalproject ### Action Required: Specify the name for your pass ###
+PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so 
+# PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
+
+PASS=-finalproject-performance                   # Choose either -finalproject-performance or -finalproject-control
+# PASS=-finalproject-control
 BENCH=${1}.c
 # INPUT=${2}
 
@@ -36,6 +39,7 @@ cleanup
 setup
 
 # # Convert source code to bitcode (IR)
+clang -S -emit-llvm -c ${1}.c
 clang -emit-llvm -c ${1}.c -o ${1}.bc
 # # Canonicalize natural loops
 opt -enable-new-pm=0 -loop-simplify ${1}.bc -o ${1}.ls.bc

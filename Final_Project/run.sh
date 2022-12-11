@@ -5,8 +5,8 @@
 ### usage: for optimized code run -- bash Final_Project/tests/run.sh -opt ${Example}
 ### usage: for unoptimized code run -- bash Final_Project/tests/run.sh ${Example}
 
-# PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so 
-PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
+PATH_MYPASS=~/final/EECS_583_Final_Project/Final_Project/build/finalprojectpass/LLVMHW1.so 
+# PATH_MYPASS=~/Final_Project/build/finalprojectpass/LLVMHW1.so
 
 PASS=-finalproject-performance                   # Choose either -finalproject-performance or -finalproject-control
 # PASS=-finalproject-control
@@ -32,6 +32,7 @@ setup
 
 if [ ${1} == -opt ]
 then
+clang -O2 -S -emit-llvm -c ${1}.c
 clang -O2 -emit-llvm -c ${2}.c -o ${2}.bc
 opt -O2 -enable-new-pm=0 ${2}.bc -o ${2}.ls.bc
 opt -O2 -enable-new-pm=0 -pgo-instr-gen -instrprof ${2}.ls.bc -o ${2}.ls.prof.bc
@@ -44,6 +45,7 @@ opt -enable-new-pm=0 --indvars -load ${PATH_MYPASS} ${PASS} < ${2}.bc > /dev/nul
 # opt -enable-new-pm=0 --indvars -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${2}.bc > /dev/null
 
 else
+clang -S -emit-llvm -c ${1}.c
 clang -emit-llvm -c ${1}.c -o ${1}.bc
 opt -enable-new-pm=0 ${1}.bc -o ${1}.ls.bc
 opt -enable-new-pm=0 -pgo-instr-gen -instrprof ${1}.ls.bc -o ${1}.ls.prof.bc
