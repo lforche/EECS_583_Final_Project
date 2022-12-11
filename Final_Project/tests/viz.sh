@@ -24,9 +24,7 @@ if [[ $VIZ_TYPE == "cfg" ]]; then
     echo "Using prof data in visualization"
     PROF_FLAGS="-pgo-instr-use -pgo-test-profile-file=$PROF_DATA -cfg-weights"
   else
-    echo "
-    
-No prof data, not including it in visualization"
+    echo "No prof data, not including it in visualization"
   fi
 fi
 

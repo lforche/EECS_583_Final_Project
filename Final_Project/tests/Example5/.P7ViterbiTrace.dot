@@ -1,5 +1,0 @@
-digraph "CFG for 'P7ViterbiTrace' function" {
-	label="CFG for 'P7ViterbiTrace' function";
-
-	Node0x55cd8ec39f20 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{entry:\l  ret void\l}"];
-}
