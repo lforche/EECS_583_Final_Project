@@ -17,6 +17,7 @@
         "regex": "cpp",
         "valarray": "cpp",
         "stdio.h": "c",
-        "hash_set": "cpp"
+        "hash_set": "cpp",
+        "compare": "cpp"
     }
 }

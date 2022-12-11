@@ -65,7 +65,7 @@ namespace Performance{
             Instruction* tempStartInst;
             Instruction* tempEndInst;
             int tempUses = 0;
-            vector<Value*> cmpIdxArrays;
+            set<Value*> cmpIdxArrays;
             Instruction* loopCountInst = nullptr;
             Value* loopCountVar = nullptr;
             ConstantInt* loopStartVal = nullptr;
@@ -127,9 +127,9 @@ namespace Performance{
                 // Verify that the instruction is either a load or a store and isn't the startInst and doesn't 
                 //      use the arrayIdxInst in it
                 if (isa<StoreInst>(*i) && (&(*i) != startInst) && (i->getOperand(1) != arrayIdxInst)) {
-                    cmpIdxArrays.push_back(i->getOperand(1));
+                    cmpIdxArrays.insert(i->getOperand(1));
                 } else if (isa<LoadInst>(*i) && (&(*i) != startInst) && (i->getOperand(0) != arrayIdxInst)) {
-                    cmpIdxArrays.push_back(i->getOperand(0));
+                    cmpIdxArrays.insert(i->getOperand(0));
                 }
             }
 
