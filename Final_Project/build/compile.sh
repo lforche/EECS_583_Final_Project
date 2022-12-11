@@ -2,7 +2,7 @@
 
 cmake ..
 
-sleep 2s
+sleep 14s
 
 make clean
 

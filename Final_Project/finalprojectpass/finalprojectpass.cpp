@@ -44,6 +44,8 @@ namespace Performance{
             ScalarEvolution& SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
             LoopAccessLegacyAnalysis* LAA = &getAnalysis<LoopAccessLegacyAnalysis>();
             DominatorTree& DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
+
+            llvm::LLVMContext &context = F.getContext();
             
             // Step 1: Create any variables used across pass
 
@@ -80,6 +82,11 @@ namespace Performance{
                     // Get the loop of this basic block
                     Loop* L = LI.getLoopFor(&(*bb));
 
+                    // if (L == nullptr)
+                    // {
+                    //     errs() << "NO LOOP!!!!!!!!!!!\n";
+                    //     return 0;
+                    // }
                     // Find arrayidx instructions with the uses
                     // No need to check the type of instruction because GetElementPtr appears to 
                     //      only be used in store and load instructions since it does the calculation of addresses
@@ -121,6 +128,13 @@ namespace Performance{
                     } 
                 }
             }
+            errs() << F.getName() << "\n";
+            if (F.getName() == "main")
+            {
+                errs() << "IN MAIN... EXITING...\n";
+                return false;
+            }
+            errs() << "\n";
 
             // Step 3: Iterate over the start and end range finding any store and load instructions
             if (startInst != nullptr && arrayIdxInst != nullptr) {
@@ -140,50 +154,40 @@ namespace Performance{
             if (!cmpIdxArrays.empty())
                 errs() << cmpIdxArrays.size() << "\n"; 
             
-            int q = 0;
-            for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    // get loop
-                    q++;
-                    // Loop* L = LI.getLoopFor(&(*bb));
-                            
-                    if (q==2)
-                    {
-                        // errs() << "\nHERE\n\n";
-                        const Twine tunaliasedName = "tunaliased";
-                        const Twine tintName = "tint";
-                        // Instruction *temp = i->clone();
-                        llvm::Type *i8Ty = llvm::Type::getInt32Ty((*bb).getContext());
-                        llvm::Type *i32Ty = llvm::Type::getInt32Ty((*bb).getContext());
-                        Instruction& firstInst = *(i);
-                        // errs() << firstInst << "\n";
-                        auto tunaliased = new AllocaInst(i8Ty, 0, tunaliasedName, &firstInst);
-                        auto tint = new AllocaInst(i32Ty, 0, tintName, &firstInst);
-                        errs() << "Inserted: " << *tunaliased << "\n";
-                        errs() << "Parent: " << tunaliased->getParent()->getName() << "\n";
-                        errs() << "Function: " << tunaliased->getFunction()->getName() << "\n\n";
 
-                        llvm::Value *v = llvm::BinaryOperator::CreateAdd(tunaliased, tint, "theyAdded", &firstInst);
+            //Find first instruction of the first basic block of the function
+            BasicBlock *bb = &(*(F.begin()));
+            Instruction *firstInst = getInstByIndex(bb, 0);
 
-                        // StoreInst *str = new StoreInst(tunaliased, tint, &firstInst);
+            llvm::Type *i8Ty = llvm::Type::getInt8Ty(context);
+            llvm::Type *i32Ty = llvm::Type::getInt32Ty(context);
 
-                        // auto x = getInstByIndex(&(*bb), 5);
+            //Create isUnaliased and TemporaryInt. Initialise isUnaliased to 0
+            const Twine tunaliasedName = "isUnaliased";
+            const Twine tintName = "tint";
+            auto tunaliasedPtr = new AllocaInst(i8Ty, 0, tunaliasedName, firstInst);
+            auto tintPtr = new AllocaInst(i32Ty, 0, tintName, firstInst);
 
-                        // x->replaceAllUsesWith(tint);
+            Value *zero = llvm::ConstantInt::get(i8Ty, 0);
+            StoreInst *tunStr = new StoreInst(zero, tunaliasedPtr, firstInst);
 
-                        // auto addIns = new AddInst
-                        // auto tint = new AllocaInst(llvm::Type::getInt8Ty(F.getContext()), 0, tintName, &(*bb));
-                        // SplitBlockAndInsertIfThenElse();
-                    }
-                }   
-            }
+            BasicBlock *arrayBB = arrayIdxInst->getParent();
+            // errs() << arrayBB->getParent()->getName() << "\n";
 
-            for (Function::iterator bb = F.begin(), e = F.end(); bb != e; ++bb) {
-                for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i) {
-                    Instruction &myIns = *i;
-                    errs() << myIns << "\n";
+            Loop *innerLoop;
+            Loop *outerLoop = getOuterLoopByInst(arrayIdxInst, LI);
+
+            LI;
+            for (auto L : outerLoop->getSubLoops())
+            {
+                if (L->contains(arrayIdxInst))
+                {
+                    innerLoop = L;
                 }
             }
+
+            errs() << "\nOuter Loop: " << outerLoop->getName() << "\nDepth: " << outerLoop->getSubLoops().size() << "\n";
+            errs() << "\nInner Loop: " << innerLoop->getName() << "\nDepth: " << innerLoop->getLoopDepth() << "\n";
 			return true; 
 		}
 
@@ -199,6 +203,43 @@ namespace Performance{
                 temp++;
             }
             return nullptr;
+        }
+
+        Loop *getOuterLoopByInst(Instruction *inst, LoopInfo &LI)
+        {
+            Loop *outerLoop = nullptr;
+            Loop *tempLoop = nullptr;
+            for (auto L : LI)
+            {
+                errs() << L->getName() << "\n";
+
+                if (L->contains(inst))
+                {
+                    outerLoop = L;
+                }
+            }
+
+            tempLoop = outerLoop;
+            bool isInDeeperLoop = true;
+
+            while (tempLoop->getSubLoops().size() != 0 && isInDeeperLoop)
+            {
+                for (auto L : tempLoop->getSubLoops())
+                {
+                    if (L->contains(inst))
+                    {
+                        outerLoop = tempLoop;
+                        tempLoop = L;
+                    }
+                }
+                if (tempLoop == outerLoop)
+                {
+                    isInDeeperLoop = false;
+                }
+                
+            }
+
+            return outerLoop;
         }
 	};
 }
