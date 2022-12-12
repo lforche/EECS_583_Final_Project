@@ -312,7 +312,7 @@ namespace Performance{
             if (startInst == nullptr || arrayIdxInst == nullptr) {
                 return 0;
             }
-            // Value *cmpVal = dyn_cast_or_null<Value>(tunAlias);
+
             ICmpInst *tunCmp = new ICmpInst(ICmpInst::ICMP_EQ, tunAlias, one, "tunCmp");
             tunCmp->insertBefore(startInst);
             BasicBlock* tailBlock = startInst->getParent();
@@ -321,19 +321,20 @@ namespace Performance{
             vector<Instruction*> instToDelete;
 
             if (!isa<LoadInst>(startInst)) {
-            return 0;
+                return 0;
             }
 
             LoadInst* tintLoad = new LoadInst(startInst->getType(), startInst->getOperand(0), tintName, startInst->getNextNode());
             for (auto it : startInst->users()) {
                 it->replaceUsesOfWith(startInst, tintLoad);
             }
+            //////////
 
-            // for (auto it : tintLoad->users()) {
-            //     while (BasicBlock::iterator i = tintLoad->getIterator(), e = tailBlock->end(); i != e; ++i) {
-            //         errs() << *i << "\n";
-            //     }
-            // }
+            //////////
+
+            //////////
+            
+            //////////
 
             // instToDelete.push_back(startInst);
 
