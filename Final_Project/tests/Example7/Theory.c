@@ -82,9 +82,9 @@ int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount
 
 
 
-        if ((tunalias != 1) && ((&b[loopCount] < &t[1]) || (&b[1] > &t[loopCount]) &&
-        (&c[loopCount] < &t[1]) || (&c[1] > &t[loopCount]) &&
-        (&e[loopCount] < &t[1]) || (&e[1] > &t[loopCount])))
+        if ((tunalias != 1) && (((&b[loopCount] < &t[1]) || (&b[1] > &t[loopCount])) && 
+        ((&c[loopCount] < &t[1]) || (&c[1] > &t[loopCount])) && 
+        ((&e[loopCount] < &t[1]) || (&e[1] > &t[loopCount]))))
         {
             tunalias = 1; 
             // printf("t is unaliased\n");

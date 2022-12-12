@@ -18,6 +18,9 @@
 #include "llvm/Analysis/ScalarEvolution.h"
 #include "llvm/Analysis/LoopNestAnalysis.h"
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
+#include "llvm/IR/CFG.h"
+#include <map>
+#include <list>
 
 using namespace std;
 using namespace llvm;
@@ -116,8 +119,8 @@ namespace Performance{
                         // Check if the loopCountInst is in the loop's preheader and is in fact the loopCountVar
                         //      so the starting value of the loop and loopCountVar can be stored for future use
                         if (loopCountInst != nullptr && loopCountInst->getParent() == L->getLoopPreheader()) {
-                            Optional<Loop::LoopBounds> loopBounds = Loop::LoopBounds::getBounds(*L, *(L->getInductionVariable(SE)), SE);
-                            loopStartVal = dyn_cast<ConstantInt>(&loopBounds->getInitialIVValue());
+                            // Optional<Loop::LoopBounds> loopBounds = Loop::LoopBounds::getBounds(*L, *(L->getInductionVariable(SE)), SE);
+                            // loopStartVal = dyn_cast<ConstantInt>(&loopBounds->getInitialIVValue());
                             loopCountVar = loopCountInst->getOperand(0);
                         }
                     } 
@@ -142,6 +145,9 @@ namespace Performance{
                         cmpIdxArrays.insert(i->getOperand(0));
                     }
                 }
+                Loop* curLoop = getInnerLoopByInst(arrayIdxInst, LI);
+                Optional<Loop::LoopBounds> loopBounds = Loop::LoopBounds::getBounds(*curLoop, *(curLoop->getInductionVariable(SE)), SE);
+                loopStartVal = dyn_cast<ConstantInt>(&loopBounds->getInitialIVValue());
             }
 
             // Step 4: Use the starting value and the final variable of the desired loop to generate the 
@@ -177,9 +183,126 @@ namespace Performance{
             errs() << "\nInner Loop: " << innerLoop->getName() << "\nDepth: " << innerLoop->getLoopDepth() << "\n";
 
             /*/////////Zach///////////*/
+            llvm::CmpInst::Predicate EQUALS = llvm::CmpInst::Predicate::ICMP_EQ;
+            llvm::CmpInst::Predicate NEQUALS = llvm::CmpInst::Predicate::ICMP_NE;
+            llvm::CmpInst::Predicate ULT = llvm::CmpInst::Predicate::ICMP_ULT;
+            llvm::CmpInst::Predicate UGT = llvm::CmpInst::Predicate::ICMP_UGT;
+            Value *one = llvm::ConstantInt::get(i8Ty, 1);
 
+            //Create necessary variables, load tunalias for initial for conditional (tunalias != 1)
+            BasicBlock *aliasCheckBlock = innerLoop->getLoopPreheader();
+            Instruction *checkBlockLastInst = aliasCheckBlock->getTerminator();
 
+            LoadInst *tunLd = new LoadInst(i8Ty, tunaliasedPtr, "tunalias", checkBlockLastInst);
 
+            //Create pointers to arrIdxPtrLow and arrIdxPtrHi
+            Instruction *arrIdxPtrLow = arrayIdxInst->clone();
+            arrIdxPtrLow->setOperand(1, loopStartVal);
+            arrIdxPtrLow->setName("arrIdxLow");
+            arrIdxPtrLow->insertBefore(checkBlockLastInst);
+
+            Instruction *arrIdxPtrHi = arrayIdxInst->clone();
+            arrIdxPtrHi->setOperand(1, loopCountVar);
+            arrIdxPtrHi->setName("arrIdxHi");
+            arrIdxPtrHi->insertBefore(checkBlockLastInst);
+
+            //Insert compare for initial conditional (tunalias != 1)
+            ICmpInst *unaliasedCheck = new ICmpInst(NEQUALS, tunLd, one, "unaliasedCheck");
+            unaliasedCheck->insertBefore(checkBlockLastInst);
+
+            //Begin creating new blocks for if/then sequence
+            Instruction *lastThenInst = SplitBlockAndInsertIfThen(unaliasedCheck, checkBlockLastInst, 0);
+    
+            int count = 0;
+            aliasCheckBlock = innerLoop->getLoopPreheader();
+            map<BasicBlock*, Value *> rightAliasBlocks;
+            
+            //Iterate over arrays that overlapp in usage
+            for (Value *i : cmpIdxArrays)
+            {
+                Instruction *temp = dyn_cast<Instruction>(i);
+
+                //Prepare right check (arrIdx high, cmp low)
+                Instruction *cmpLow = arrayIdxInst->clone();
+                cmpLow->setOperand(1, temp->getOperand(1));
+                cmpLow->setOperand(1, loopStartVal);
+                cmpLow->setName("cmpLow" + to_string(count));
+                cmpLow->insertBefore(lastThenInst);
+                ICmpInst *rightAliasCheck = new ICmpInst(UGT, cmpLow, arrIdxPtrHi, "rCheck" + to_string(count));
+                rightAliasCheck->insertBefore(lastThenInst);
+
+                lastThenInst = SplitBlockAndInsertIfThen(rightAliasCheck, lastThenInst, 0);
+                BasicBlock *currBlock = lastThenInst->getParent();
+
+                rightAliasBlocks.insert({currBlock->getSinglePredecessor() , temp->getOperand(1)});
+                BranchInst *ifBr = dyn_cast<BranchInst>(currBlock->getSinglePredecessor()->getTerminator());
+
+                ifBr->setSuccessor(1, aliasCheckBlock);
+                
+                //Avoid dummy blocks (blocks with only 1 instruction that is an unconditional branch)
+                for (BasicBlock *j : successors(currBlock))
+                {
+                    if (j->size() == 1)
+                    {
+                        lastThenInst->setSuccessor(0, j->getSingleSuccessor());
+                    }
+                }
+
+                count++;
+            }
+            
+            //Iterate over right alias blocks to create equivalent left alias checking blocks
+            count = 0;
+            vector<BasicBlock*> leftAliasBlocks;
+            BasicBlock* lastLeftAlias;
+            for (auto i : rightAliasBlocks)
+            {
+                //Prepare left check(arrIdx low, cmp hi)
+                Instruction *cmpHi = arrayIdxInst->clone();
+                cmpHi->setOperand(1, i.second);
+                cmpHi->setOperand(1, loopCountVar);
+                cmpHi->setName("cmpHi" + to_string(count));
+                cmpHi->insertBefore(getInstByIndex(i.first, 0));
+
+                ICmpInst *leftAliasCheck = new ICmpInst(ULT, cmpHi, arrIdxPtrLow, "lCheck" + count);
+                leftAliasCheck->insertAfter(getInstByIndex(i.first, 0));
+
+                lastThenInst = SplitBlockAndInsertIfThen(leftAliasCheck, getInstByIndex(i.first, 2), 0);
+                BasicBlock *thenBlock = lastThenInst->getParent();
+
+                //Track the added blocks
+                leftAliasBlocks.push_back(thenBlock->getSinglePredecessor());
+                lastLeftAlias = thenBlock->getSinglePredecessor();
+                count++;
+            }
+
+            for (int i = 0; i < leftAliasBlocks.size(); i++)
+            {
+                //Set true conditions to immediately jump to next array comparison 
+                BasicBlock * currLeftAliasBlock = leftAliasBlocks[i];
+                BranchInst *temp = dyn_cast<BranchInst>(currLeftAliasBlock->getTerminator());
+                if (currLeftAliasBlock != lastLeftAlias)
+                {
+                    temp->setSuccessor(0, leftAliasBlocks[i+1]);
+                }
+                else
+                {
+                    //If we are in the last left alias check block, set true condition to point to 'then' block 
+                    BranchInst *lastBranch = dyn_cast<BranchInst>(temp->getSuccessor(1)->getTerminator());
+                    lastBranch = dyn_cast<BranchInst>(lastBranch->getSuccessor(0)->getTerminator());
+                    BasicBlock* toPointTo = lastBranch->getParent();
+
+                    temp->setSuccessor(0, toPointTo);
+
+                    //Insert final store and load instructions
+                    StoreInst *strTunaliased = new StoreInst(one, tunaliasedPtr, toPointTo->getTerminator());
+                    LoadInst *ldTunaliased = new LoadInst(i8Ty, tunaliasedPtr, "tunalias", toPointTo->getSingleSuccessor()->getTerminator());
+                }
+            }
+
+            //Delete dummy blocks
+            llvm::EliminateUnreachableBlocks(F);
+            
             ////////////////////////////
 
             /*////////Lindsey/////////*/

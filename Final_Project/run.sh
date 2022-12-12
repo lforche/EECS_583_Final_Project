@@ -45,6 +45,10 @@ opt -enable-new-pm=0 --indvars -f -load ${PATH_MYPASS} ${PASS} ${2}.bc > ${2}.ls
 opt -enable-new-pm=0 --indvars -S -load ${PATH_MYPASS} ${PASS} ${2}.bc > ${2}.ll
 # opt -enable-new-pm=0 --indvars -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${2}.bc > /dev/null
 
+clang ${2}.ls.bc -o ${2}_pass
+clang ${2}.bc -o ${2}_no_pass
+
+
 else
 # clang -S -emit-llvm -c ${1}.c
 clang -emit-llvm -c ${1}.c -o ${1}.bc
@@ -58,5 +62,6 @@ setup
 # opt -enable-new-pm=0 --indvars -f -load ${PATH_MYPASS} ${PASS} ${1}.bc > ${1}.ls.bc 2> /dev/null
 opt -enable-new-pm=0 --indvars -S -load ${PATH_MYPASS} -finalproject-control ${1}.bc > ${1}.ll
 # opt -enable-new-pm=0 --indvars -pgo-instr-use -load ${PATH_MYPASS} ${NAME_MYPASS} < ${1}.bc > /dev/null
+
 
 fi
