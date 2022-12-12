@@ -317,16 +317,10 @@ namespace Performance{
             tunCmp->insertBefore(startInst);
             Instruction *thenTerm, *elseTerm;
             SplitBlockAndInsertIfThenElse(tunCmp, startInst, &thenTerm, &elseTerm);
-            vector<Instruction*> instToDelete;
             BasicBlock* tailBlock = startInst->getParent();
 
             if (!isa<LoadInst>(startInst)) {
                 return 0;
-            }
-
-            LoadInst* tintLoad = new LoadInst(startInst->getType(), startInst->getOperand(0), tintName, startInst->getNextNode());
-            for (auto it : startInst->users()) {
-                it->replaceUsesOfWith(startInst, tintLoad);
             }
             //////////
 
@@ -367,10 +361,6 @@ namespace Performance{
 
                         kill[i]->replaceUsesWithIf(phi, [=](Use &U) { 
                             Instruction *I = dyn_cast<Instruction>(U.getUser());
-                            errs() << "I: " << *(I) << "\n";
-                            errs() << "thenBlock: " << *(thenBlock) << "\n";
-                            errs() << "TailBlock: " << *(tailBlock) << "\n";
-                            
                             return (I->getParent() == tailBlock); });
                     }
                 kill[i]->eraseFromParent();
@@ -379,74 +369,29 @@ namespace Performance{
             //////////
 
             //////////
+            Instruction *replaceAllInst;
+            vector<Instruction*> storeInstArr;
+            vector<Instruction*> instToDelete;
+            Instruction* thenFirstInst = getInstByIndex(thenBlock, 0);
+            Instruction* currStore;
+
+            for (BasicBlock::iterator i = thenBlock->begin(), e = thenBlock->end(); i != e; ++i) {
+                if (&*i != thenFirstInst) {
+                    if (isa<LoadInst>(*i) && replaceAllInst != nullptr && (dyn_cast<Instruction>(i->getOperand(0)) == arrayIdxInst)) {
+                        i->replaceAllUsesWith(replaceAllInst->getOperand(0));
+                        instToDelete.push_back(&*i);
+                    } else if (isa<StoreInst>(*i) && (dyn_cast<Instruction>(i->getOperand(1)) == arrayIdxInst)) {
+                        replaceAllInst = dyn_cast<Instruction>(i);
+                        currStore = &*i;
+                    }
+                }
+            }
             
+            for(int i = 0; i < instToDelete.size(); i++) {
+                instToDelete[i]->eraseFromParent();
+            }
             //////////
 
-            // instToDelete.push_back(startInst);
-
-            // for (BasicBlock::iterator i = tintLoad->getIterator(), e = endInst->getIterator(); i != e; ++i) {
-            //     if (isa<StoreInst>(*i) && (dyn_cast<Instruction>(i->getOperand(1)) == arrayIdxInst)) {
-            //         if (&*i != startInst && &*i != tintLoad) {
-            //             instToDelete.push_back(&*i);
-            //         }
-            //     } else if (isa<LoadInst>(*i) && (dyn_cast<Instruction>(i->getOperand(0)) == arrayIdxInst)) {
-            //         if (&*i != startInst && &*i != tintLoad) {
-            //             instToDelete.push_back(&*i);
-            //         }
-            //     }
-            // }
-
-            // instToDelete.push_back(endInst);
-            // errs() << "\n\n";
-            // for(int i = instToDelete.size() - 1; i >= 0; i--) {
-            //     // Instruction* inst = instToDelete[i];
-            //     // inst->eraseFromParent();
-            //     errs() << *instToDelete[i] << "\n";
-            // }
-            
-            // for (BasicBlock::iterator i = startInst->getIterator(), e = endInst->getIterator(); i != e; ++i) {
-            //     if (isa<StoreInst>(*i)  && (&(*i) != startInst) && (dyn_cast<Instruction>(i->getOperand(0)) == arrayIdxInst)) {
-            //         // Instruction* inst = &*i;
-            //         // inst->eraseFromParent();
-            //         errs() << *(i->getOperand(0)) << "\n";
-            //     } // else if (isa<LoadInst>(*i)  && (&(*i) != startInst) && (dyn_cast<Instruction>(i->getOperand(0)) != arrayIdxInst)) {
-            //     //     cmpIdxArrays.insert(i->getOperand(0));
-            //     // }
-            // }
-
-            // BasicBlock* headBlock = arrayIdxInst->getParent();
-            // // BasicBlock* thenBlock = headBlock->splitBasicBlock(startInst->getIterator(), "thenBlock");
-            // BasicBlock* elseBlock = headBlock->splitBasicBlock(startInst->getIterator(), "elseBlock");
-            // BasicBlock* tailBlock = elseBlock->splitBasicBlock(endInst->getNextNode()->getIterator(), "tailBlock");
-
-            // Instruction *headOldBlock = headBlock->getTerminator();
-            // LLVMContext &C = headBlock->getContext();
-            // BasicBlock* thenBlock = BasicBlock::Create(C, "thenBlock", headBlock->getParent(), tailBlock);
-            // Instruction* thenInst = BranchInst::Create(tailBlock, thenBlock);
-
-            // for (BasicBlock::iterator i = startInst->getIterator(), e = endInst->getIterator(); i != e; ++i) {
-            //     Instruction* cp = startInst->clone();
-            //     cp->insertBefore(elseTerm);
-            //     Instruction* cp2 = startInst->clone();
-            //     cp2->insertBefore(thenTerm);
-            // }
-            // Instruction* cp = startInst->clone();
-            // cp->insertBefore(elseTerm);
-            // Instruction* cp2 = startInst->clone();
-            // cp2->insertBefore(thenTerm);
-            // Instruction* test = getInstByIndex((innerLoop->getLoopPreheader()), 0);
-            // PHINode* phi = PHINode::Create(startInst->getType(), 2, "phi1", test);
-            // phi->addIncoming(cp, elseTerm->getParent());
-            // phi->addIncoming(cp2, thenTerm->getParent());
-            // // startInst->replaceUsesOfWith(startInst, phi);
-            // for (auto it : startInst->users())
-            //     it->replaceUsesOfWith(startInst, phi);
-            // Instruction* inst = startInst;
-            // inst->eraseFromParent();
-            // // BranchInst *headNewBlock = BranchInst::Create(/*ifTrue*/thenBlock, /*ifFalse*/elseBlock, tunCmp);
-            // // DT.addNewBlock(thenBlock, headBlock);
-            // // // // headNewTerm->setMetadata(LLVMContext::MD_prof, BranchWeights);
-            // // ReplaceInstWithInst(headOldBlock, headNewBlock);
             ////////////////////////////
 			return true; 
 		}
