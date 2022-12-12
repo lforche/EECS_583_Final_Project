@@ -95,7 +95,7 @@ namespace Performance{
                         // since for (auto it : i->users()) appears to iterate backwards, the first user is actually
                         //      the last user in the loop for the current instruction hence why tempEndInst is initialized
                         //      to the first user
-                        tempEndInst = dyn_cast<Instruction>(*(i->user_begin())); 
+                        // tempEndInst = dyn_cast<Instruction>(*(i->user_begin())); 
 
                         // Set tempUses to zero and iterate over users of the current instruction to determine
                         //      if the current instruction has more users and set tempStartInst to that user
@@ -107,13 +107,12 @@ namespace Performance{
                                 tempStartInst = dyn_cast<Instruction>(it);
                             }
                         }
-                        
+                        // errs() << "\n\n";
                         // If the number of users for the current is greater than the previously found amount
                         //      replace all of the none temporary variables to save it for future use
                         if (tempUses > numUses) {
                             numUses = tempUses;
                             startInst = tempStartInst;
-                            endInst = tempEndInst;
                             arrayIdxInst = dyn_cast<Instruction>(i);
                         }
 
@@ -127,13 +126,27 @@ namespace Performance{
                     } 
                 }
             }
-            errs() << F.getName() << "\n";
+            
             if (F.getName() == "main")
             {
                 errs() << "IN MAIN... EXITING...\n";
                 return false;
             }
             errs() << "\n";
+
+            if (startInst == nullptr) {
+                return false;
+            }
+
+            int count = -1;
+            for (auto it : startInst->getOperand(0)->users()) {
+                Instruction* inst = dyn_cast<Instruction>(it);
+                int tempCount = getIndexByInst(inst);
+                if (tempCount > count) {
+                    endInst = inst;
+                    count = tempCount;
+                }
+            }               
 
             // Step 3: Iterate over the start and end range finding any store and load instructions
             if (startInst != nullptr && arrayIdxInst != nullptr) {
@@ -214,7 +227,7 @@ namespace Performance{
             //Begin creating new blocks for if/then sequence
             Instruction *lastThenInst = SplitBlockAndInsertIfThen(unaliasedCheck, checkBlockLastInst, 0);
     
-            int count = 0;
+            count = 0;
             aliasCheckBlock = innerLoop->getLoopPreheader();
             map<BasicBlock*, Value *> rightAliasBlocks;
             
@@ -370,8 +383,8 @@ namespace Performance{
 
             //////////
             Instruction *replaceAllInst;
-            vector<Instruction*> storeInstArr;
-            vector<Instruction*> instToDelete;
+            vector<Instruction*> loadToDelete;
+            vector<Instruction*> storeToDelete;
             Instruction* thenFirstInst = getInstByIndex(thenBlock, 0);
             Instruction* currStore;
 
@@ -379,16 +392,23 @@ namespace Performance{
                 if (&*i != thenFirstInst) {
                     if (isa<LoadInst>(*i) && replaceAllInst != nullptr && (dyn_cast<Instruction>(i->getOperand(0)) == arrayIdxInst)) {
                         i->replaceAllUsesWith(replaceAllInst->getOperand(0));
-                        instToDelete.push_back(&*i);
+                        loadToDelete.push_back(&*i);
                     } else if (isa<StoreInst>(*i) && (dyn_cast<Instruction>(i->getOperand(1)) == arrayIdxInst)) {
                         replaceAllInst = dyn_cast<Instruction>(i);
                         currStore = &*i;
+                        storeToDelete.push_back(&*i);
                     }
                 }
             }
             
-            for(int i = 0; i < instToDelete.size(); i++) {
-                instToDelete[i]->eraseFromParent();
+            for(int i = 0; i < loadToDelete.size(); i++) {
+                loadToDelete[i]->eraseFromParent();
+            }
+            errs() << storeToDelete.size() << "\t" << *endInst << "\n";
+            for(int i = 0; i < storeToDelete.size(); i++) {
+                errs() << *(storeToDelete[i]) << "\n";
+                storeToDelete[i]->eraseFromParent();
+                errs() << "print\n";
             }
             //////////
 
@@ -459,6 +479,22 @@ namespace Performance{
                 }
             }
             return innerLoop;
+        }
+
+        int getIndexByInst(Instruction *inst)
+        {
+            int count = 0;
+            BasicBlock* bb = inst->getParent();
+
+            for (BasicBlock::iterator i = bb->begin(), e = bb->end(); i != e; ++i)
+            {
+                if (&*i == inst)
+                {
+                    return count;
+                }
+                count++;
+            }
+            return count;
         }
 	};
 }
