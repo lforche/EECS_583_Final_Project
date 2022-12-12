@@ -72,11 +72,14 @@ int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount
 
         t = q[i-3]; 
         for (int k = 1; k <= loopCount; k++) { 
-        __asm__ volatile ("xchg %r13, %r13"); 
+        // __asm__ volatile ("xchg %r13, %r13"); 
             a[k] = b[k-1] + c[k-1];
             t[k]++;
             e[k] = b[k-1] + c[k-1];
-        __asm__ volatile ("xchg %r13, %r13"); 
+            b[k] = t[k];
+            c[k] = e[k];
+            t[k]++;
+        // __asm__ volatile ("xchg %r13, %r13"); 
             p[k] += t[k];
         //     bint = t[k];
         //     a[k] = b[k-1] + c[k-1];
@@ -84,7 +87,7 @@ int P6Viterbi (int **x, int **y, int **z, int **q, int loopAmount, int loopCount
         //     e[k] = b[k-1] + c[k-1];
         // __asm__ volatile ("xchg %r13, %r13"); 
         //     p[k] += bint;
-        __asm__ volatile ("xchg %r13, %r13");  
+        // __asm__ volatile ("xchg %r13, %r13");  
         }
     }
 

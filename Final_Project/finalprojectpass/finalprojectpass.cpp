@@ -315,10 +315,10 @@ namespace Performance{
 
             ICmpInst *tunCmp = new ICmpInst(ICmpInst::ICMP_EQ, tunAlias, one, "tunCmp");
             tunCmp->insertBefore(startInst);
-            BasicBlock* tailBlock = startInst->getParent();
             Instruction *thenTerm, *elseTerm;
             SplitBlockAndInsertIfThenElse(tunCmp, startInst, &thenTerm, &elseTerm);
             vector<Instruction*> instToDelete;
+            BasicBlock* tailBlock = startInst->getParent();
 
             if (!isa<LoadInst>(startInst)) {
                 return 0;
@@ -329,6 +329,52 @@ namespace Performance{
                 it->replaceUsesOfWith(startInst, tintLoad);
             }
             //////////
+
+            count = 0;
+            vector<Instruction *> kill;
+            for (BasicBlock::iterator i = startInst->getIterator(), e = endInst->getIterator(); i != e; ++i) {
+                    Instruction *currInst = &(*i);
+
+                    Instruction *thenClone = currInst->clone();
+                    Instruction *elseClone = currInst->clone();
+
+                    thenClone->insertBefore(thenTerm);
+                    elseClone->insertBefore(elseTerm);
+
+                    kill.push_back(currInst);
+                count++;
+            }
+            BasicBlock* thenBlock = thenTerm->getParent();
+            BasicBlock* elseBlock = elseTerm->getParent();
+            for (int i = 0; i < count; i++)
+            {
+                Instruction *thenInst = getInstByIndex(thenBlock, i);
+                Instruction *elseInst = getInstByIndex(elseBlock, i);
+
+                kill[i]->replaceUsesWithIf(thenInst, [=](Use &U) { 
+                            Instruction *I = dyn_cast<Instruction>(U.getUser());
+                            return (I->getParent() == thenBlock); });
+
+                kill[i]->replaceUsesWithIf(elseInst, [=](Use &U) { 
+                            Instruction *I = dyn_cast<Instruction>(U.getUser());
+                            return (I->getParent() == elseBlock); });
+
+                if (!isa<StoreInst>(kill[i]))
+                    {
+                        PHINode *phi = PHINode::Create(kill[i]->getType(), 2, "phi", (getInstByIndex(tailBlock, 0)));
+                        phi->addIncoming(thenInst, thenTerm->getParent());
+                        phi->addIncoming(elseInst, elseTerm->getParent());
+
+                        kill[i]->replaceUsesWithIf(phi, [=](Use &U) { 
+                            Instruction *I = dyn_cast<Instruction>(U.getUser());
+                            errs() << "I: " << *(I) << "\n";
+                            errs() << "thenBlock: " << *(thenBlock) << "\n";
+                            errs() << "TailBlock: " << *(tailBlock) << "\n";
+                            
+                            return (I->getParent() == tailBlock); });
+                    }
+                kill[i]->eraseFromParent();
+            }
 
             //////////
 
