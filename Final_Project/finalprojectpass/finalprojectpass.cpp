@@ -374,7 +374,7 @@ namespace Performance{
 
                         kill[i]->replaceUsesWithIf(phi, [=](Use &U) { 
                             Instruction *I = dyn_cast<Instruction>(U.getUser());
-                            return (I->getParent() == tailBlock); });
+                            return ((I->getParent() != thenBlock) && (I->getParent() != elseBlock)); });
                     }
                 kill[i]->eraseFromParent();
             }
@@ -409,6 +409,19 @@ namespace Performance{
                 errs() << *(storeToDelete[i]) << "\n";
                 storeToDelete[i]->eraseFromParent();
                 errs() << "print\n";
+            }
+
+            //Remove unnecessary phi nodes
+            int tailEndInst = getIndexByInst(tailBlock->getTerminator());
+            for (int i = tailEndInst; i > 0; i--) {
+                Instruction *currInst = getInstByIndex(tailBlock, i);
+                errs() << "INST: " << *currInst << "\n";
+                if ((currInst->getNumUses() == 0) && (isa<PHINode>(currInst)))
+                {
+                    errs() << "NO USERS : " << *currInst << "\n";
+                    currInst->eraseFromParent();
+                }
+
             }
             //////////
 
